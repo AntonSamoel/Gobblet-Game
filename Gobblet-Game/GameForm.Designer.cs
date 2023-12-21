@@ -33,25 +33,25 @@
 			endGame = new Button();
 			newGameBtn = new Button();
 			panel2 = new Panel();
-			pictureBox2 = new PictureBox();
-			pictureBox1 = new PictureBox();
-			pictureBox3 = new PictureBox();
+			stack3 = new PictureBox();
+			stack2 = new PictureBox();
+			stack1 = new PictureBox();
 			p1Name = new Label();
 			boardPanel = new Panel();
 			panel4 = new Panel();
-			pictureBox5 = new PictureBox();
-			pictureBox4 = new PictureBox();
-			pictureBox6 = new PictureBox();
+			stack6 = new PictureBox();
+			stack5 = new PictureBox();
+			stack4 = new PictureBox();
 			p2Name = new Label();
 			panel1.SuspendLayout();
 			panel2.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
-			((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
-			((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
+			((System.ComponentModel.ISupportInitialize)stack3).BeginInit();
+			((System.ComponentModel.ISupportInitialize)stack2).BeginInit();
+			((System.ComponentModel.ISupportInitialize)stack1).BeginInit();
 			panel4.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)pictureBox5).BeginInit();
-			((System.ComponentModel.ISupportInitialize)pictureBox4).BeginInit();
-			((System.ComponentModel.ISupportInitialize)pictureBox6).BeginInit();
+			((System.ComponentModel.ISupportInitialize)stack6).BeginInit();
+			((System.ComponentModel.ISupportInitialize)stack5).BeginInit();
+			((System.ComponentModel.ISupportInitialize)stack4).BeginInit();
 			SuspendLayout();
 			// 
 			// panel1
@@ -93,9 +93,9 @@
 			// panel2
 			// 
 			panel2.BackgroundImage = Properties.Resources.grunge_checkerboard_texture_background_1048_11685;
-			panel2.Controls.Add(pictureBox2);
-			panel2.Controls.Add(pictureBox1);
-			panel2.Controls.Add(pictureBox3);
+			panel2.Controls.Add(stack3);
+			panel2.Controls.Add(stack2);
+			panel2.Controls.Add(stack1);
 			panel2.Controls.Add(p1Name);
 			panel2.Dock = DockStyle.Left;
 			panel2.Location = new Point(0, 71);
@@ -104,38 +104,39 @@
 			panel2.Size = new Size(279, 846);
 			panel2.TabIndex = 1;
 			// 
-			// pictureBox2
+			// stack3
 			// 
-			pictureBox2.BackColor = Color.Transparent;
-			pictureBox2.Image = Properties.Resources.w4;
-			pictureBox2.Location = new Point(47, 539);
-			pictureBox2.Name = "pictureBox2";
-			pictureBox2.Size = new Size(156, 177);
-			pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
-			pictureBox2.TabIndex = 5;
-			pictureBox2.TabStop = false;
+			stack3.BackColor = Color.Transparent;
+			stack3.Image = Properties.Resources.w4;
+			stack3.Location = new Point(47, 539);
+			stack3.Name = "stack3";
+			stack3.Size = new Size(156, 177);
+			stack3.SizeMode = PictureBoxSizeMode.Zoom;
+			stack3.TabIndex = 5;
+			stack3.TabStop = false;
 			// 
-			// pictureBox1
+			// stack2
 			// 
-			pictureBox1.BackColor = Color.Transparent;
-			pictureBox1.Image = Properties.Resources.w4;
-			pictureBox1.Location = new Point(47, 317);
-			pictureBox1.Name = "pictureBox1";
-			pictureBox1.Size = new Size(156, 177);
-			pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
-			pictureBox1.TabIndex = 4;
-			pictureBox1.TabStop = false;
+			stack2.BackColor = Color.Transparent;
+			stack2.Image = Properties.Resources.w4;
+			stack2.Location = new Point(47, 317);
+			stack2.Name = "stack2";
+			stack2.Size = new Size(156, 177);
+			stack2.SizeMode = PictureBoxSizeMode.Zoom;
+			stack2.TabIndex = 4;
+			stack2.TabStop = false;
 			// 
-			// pictureBox3
+			// stack1
 			// 
-			pictureBox3.BackColor = Color.Transparent;
-			pictureBox3.Image = Properties.Resources.w4;
-			pictureBox3.Location = new Point(47, 106);
-			pictureBox3.Name = "pictureBox3";
-			pictureBox3.Size = new Size(156, 177);
-			pictureBox3.SizeMode = PictureBoxSizeMode.Zoom;
-			pictureBox3.TabIndex = 3;
-			pictureBox3.TabStop = false;
+			stack1.BackColor = Color.Transparent;
+			stack1.Image = Properties.Resources.w4;
+			stack1.Location = new Point(47, 106);
+			stack1.Name = "stack1";
+			stack1.Size = new Size(156, 177);
+			stack1.SizeMode = PictureBoxSizeMode.Zoom;
+			stack1.TabIndex = 3;
+			stack1.TabStop = false;
+			stack1.Click += stack1_Click;
 			// 
 			// p1Name
 			// 
@@ -163,9 +164,9 @@
 			// panel4
 			// 
 			panel4.BackgroundImage = Properties.Resources.grunge_checkerboard_texture_background_1048_11685;
-			panel4.Controls.Add(pictureBox5);
-			panel4.Controls.Add(pictureBox4);
-			panel4.Controls.Add(pictureBox6);
+			panel4.Controls.Add(stack6);
+			panel4.Controls.Add(stack5);
+			panel4.Controls.Add(stack4);
 			panel4.Controls.Add(p2Name);
 			panel4.Dock = DockStyle.Right;
 			panel4.ForeColor = Color.White;
@@ -175,38 +176,38 @@
 			panel4.Size = new Size(268, 846);
 			panel4.TabIndex = 3;
 			// 
-			// pictureBox5
+			// stack6
 			// 
-			pictureBox5.BackColor = Color.Transparent;
-			pictureBox5.Image = Properties.Resources.b4;
-			pictureBox5.Location = new Point(68, 539);
-			pictureBox5.Name = "pictureBox5";
-			pictureBox5.Size = new Size(156, 177);
-			pictureBox5.SizeMode = PictureBoxSizeMode.Zoom;
-			pictureBox5.TabIndex = 9;
-			pictureBox5.TabStop = false;
+			stack6.BackColor = Color.Transparent;
+			stack6.Image = Properties.Resources.b4;
+			stack6.Location = new Point(68, 539);
+			stack6.Name = "stack6";
+			stack6.Size = new Size(156, 177);
+			stack6.SizeMode = PictureBoxSizeMode.Zoom;
+			stack6.TabIndex = 9;
+			stack6.TabStop = false;
 			// 
-			// pictureBox4
+			// stack5
 			// 
-			pictureBox4.BackColor = Color.Transparent;
-			pictureBox4.Image = Properties.Resources.b4;
-			pictureBox4.Location = new Point(68, 317);
-			pictureBox4.Name = "pictureBox4";
-			pictureBox4.Size = new Size(156, 177);
-			pictureBox4.SizeMode = PictureBoxSizeMode.Zoom;
-			pictureBox4.TabIndex = 8;
-			pictureBox4.TabStop = false;
+			stack5.BackColor = Color.Transparent;
+			stack5.Image = Properties.Resources.b4;
+			stack5.Location = new Point(68, 317);
+			stack5.Name = "stack5";
+			stack5.Size = new Size(156, 177);
+			stack5.SizeMode = PictureBoxSizeMode.Zoom;
+			stack5.TabIndex = 8;
+			stack5.TabStop = false;
 			// 
-			// pictureBox6
+			// stack4
 			// 
-			pictureBox6.BackColor = Color.Transparent;
-			pictureBox6.Image = Properties.Resources.b4;
-			pictureBox6.Location = new Point(68, 106);
-			pictureBox6.Name = "pictureBox6";
-			pictureBox6.Size = new Size(156, 177);
-			pictureBox6.SizeMode = PictureBoxSizeMode.Zoom;
-			pictureBox6.TabIndex = 7;
-			pictureBox6.TabStop = false;
+			stack4.BackColor = Color.Transparent;
+			stack4.Image = Properties.Resources.b4;
+			stack4.Location = new Point(68, 106);
+			stack4.Name = "stack4";
+			stack4.Size = new Size(156, 177);
+			stack4.SizeMode = PictureBoxSizeMode.Zoom;
+			stack4.TabIndex = 7;
+			stack4.TabStop = false;
 			// 
 			// p2Name
 			// 
@@ -240,14 +241,14 @@
 			panel1.ResumeLayout(false);
 			panel2.ResumeLayout(false);
 			panel2.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
-			((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
-			((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
+			((System.ComponentModel.ISupportInitialize)stack3).EndInit();
+			((System.ComponentModel.ISupportInitialize)stack2).EndInit();
+			((System.ComponentModel.ISupportInitialize)stack1).EndInit();
 			panel4.ResumeLayout(false);
 			panel4.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)pictureBox5).EndInit();
-			((System.ComponentModel.ISupportInitialize)pictureBox4).EndInit();
-			((System.ComponentModel.ISupportInitialize)pictureBox6).EndInit();
+			((System.ComponentModel.ISupportInitialize)stack6).EndInit();
+			((System.ComponentModel.ISupportInitialize)stack5).EndInit();
+			((System.ComponentModel.ISupportInitialize)stack4).EndInit();
 			ResumeLayout(false);
 		}
 
@@ -259,12 +260,12 @@
 		private Panel panel4;
 		private Label p1Name;
 		private Label p2Name;
-		private PictureBox pictureBox3;
-		private PictureBox pictureBox6;
-		private PictureBox pictureBox2;
-		private PictureBox pictureBox1;
-		private PictureBox pictureBox5;
-		private PictureBox pictureBox4;
+		private PictureBox stack1;
+		private PictureBox stack4;
+		private PictureBox stack3;
+		private PictureBox stack2;
+		private PictureBox stack6;
+		private PictureBox stack5;
 		private Button endGame;
 		private Button newGameBtn;
 	}
