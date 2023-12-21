@@ -8,7 +8,7 @@ namespace Gobblet_Game
 {
 	public class Player
 	{
-		public Player(string name, bool isMyTurn, Piece[] pieces)
+		public Player(string name, bool isMyTurn, List<Stack<Piece>> pieces)
 		{
 			Name = name;
 			IsMyTurn = isMyTurn;
@@ -17,6 +17,7 @@ namespace Gobblet_Game
 
 		public string Name { get; set; }
         public bool IsMyTurn { get; set; }
-		public Piece[] Pieces { get; set; }
+		public List<Stack<Piece>> Pieces { get; set; }
     }
 }
+

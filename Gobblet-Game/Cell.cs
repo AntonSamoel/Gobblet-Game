@@ -8,14 +8,13 @@ namespace Gobblet_Game
 {
 	public class Cell
 	{
-        public Stack<Piece> Pieces { get; set; } = new Stack<Piece>();
+        public Stack<Piece> Pieces { get; set; }
         public int Row { get; set; }
         public int Column { get; set; }
 
-		public Cell( int row, int column)
+		public Cell( )
 		{
-			Row = row;
-			Column = column;
+			Pieces = new Stack<Piece>();
 		}
 	}
 }
