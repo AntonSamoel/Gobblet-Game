@@ -37,7 +37,7 @@ namespace Gobblet_Game
 		{
 			if (pvpRb.Checked)
 			{
-				GameForm gameForm = new GameForm();
+				GameForm gameForm = new GameForm(player1Nametb.Text,player2Nametb.Text);
 				gameForm.Show();
 			}
 			else if (pvcRb.Checked)

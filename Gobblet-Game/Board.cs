@@ -8,11 +8,11 @@ namespace Gobblet_Game
 {
 	public class Board
 	{
-		public Board(Cell[] celles)
-		{
-			Celles = celles;
-		}
+		public Cell[,] Celles { get; set; }
 
-		public Cell[] Celles { get; set; }
+        public Board()
+        {
+			Celles = new Cell[4, 4]; 
+		}
     }
 }

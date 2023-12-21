@@ -8,8 +8,10 @@ namespace Gobblet_Game
 {
 	public class Piece
 	{
-		public Piece(int size, string playerName)
+        public int Id { get; set; }
+        public Piece(int id,int size, string playerName)
 		{
+			Id = id;
 			Size = size;
 			PlayerName = playerName;
 		}
