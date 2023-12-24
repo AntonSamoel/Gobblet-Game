@@ -9,6 +9,8 @@ namespace Gobblet_Game
 	public class Piece
 	{
         public int Id { get; set; }
+        public Color Color { get; set; }
+        public bool IsOut { get; set; }
         public Piece(int id,int size, string playerName)
 		{
 			Id = id;
