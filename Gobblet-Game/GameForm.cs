@@ -27,7 +27,6 @@ namespace Gobblet_Game
 
 
 
-
 		public GameForm(string player1Name, string player2Name)
 		{
 			Player1Name = player1Name;
@@ -97,9 +96,9 @@ namespace Gobblet_Game
 			Player player1 = new("player1", true, player1Pieces);
 			Player player2 = new("player2", true, player2Pieces);
 
-			for(int i = 0; i < 4; i++)
+			for (int i = 0; i < 4; i++)
 			{
-				for(int j=0; j < 4; j++)
+				for (int j = 0; j < 4; j++)
 				{
 					Celles[i, j] = new Cell();
 					Celles[i, j].Pieces = new Stack<Piece>();
@@ -165,11 +164,11 @@ namespace Gobblet_Game
 					if (i % 2 == 0)
 					{
 						pictureBoxes[i, j].Image = Properties.Resources.b4;
-						Celles[i, j].Pieces.Push(new Piece(25,3,"Anotn"));
+						Celles[i, j].Pieces.Push(new Piece(25, 3, "Anotn"));
 					}
 					pictureBoxes[i, j].Tag = Celles[i, j];
 
-					pictureBoxes[i, j].Click += PictureBox_Click;
+					pictureBoxes[i, j].Click += PictureBox_Click; // syntax for adding some event to the picture box
 					boardPanel.Controls.Add(pictureBoxes[i, j]);
 				}
 				top += cellHeight;
@@ -211,55 +210,82 @@ namespace Gobblet_Game
 					}
 				}
 			}
-			
+
 		}
 
 		private void PictureBox_Click(object sender, EventArgs e)
 		{
+			
 			PictureBox currentPictureBox = sender as PictureBox;
+			
 
 			if (previousPictureBox != null)
 			{
-				currentPictureBox.Image = previousPictureBox.Image; // check for null image **
 				Cell currentCell = currentPictureBox.Tag as Cell;
 				Cell PreviosCell = previousPictureBox.Tag as Cell;
-				currentCell.Pieces.Push(PreviosCell.Pieces.Pop());
-				
 				if (PreviosCell.Pieces.Count > 0)
 				{
-					Piece piece = player1Pieces[0].Peek();
-					if (piece.Size == 4)
-					{
-						previousPictureBox.Image = Properties.Resources.b4;
-					}
-					else if (piece.Size == 3)
-					{
-						previousPictureBox.Image = Properties.Resources.b3;
+					currentPictureBox.Image = previousPictureBox.Image; // check for null image **
+					currentCell.Pieces.Push(PreviosCell.Pieces.Pop());
 
-					}
-					else if (piece.Size == 2)
+					if (PreviosCell.Pieces.Count > 0)
 					{
-						previousPictureBox.Image = Properties.Resources.b2;
+						Piece piece = player1Pieces[0].Peek();
+						if (piece.Size == 4)
+						{
+							previousPictureBox.Image = Properties.Resources.b4;
+						}
+						else if (piece.Size == 3)
+						{
+							previousPictureBox.Image = Properties.Resources.b3;
 
+						}
+						else if (piece.Size == 2)
+						{
+							previousPictureBox.Image = Properties.Resources.b2;
+
+						}
+						else
+						{
+							previousPictureBox.Image = Properties.Resources.b1;
+						}
 					}
 					else
 					{
-						previousPictureBox.Image = Properties.Resources.b1;
-
+						previousPictureBox.Image = null;
 					}
-				}
-				else
-				{
-					previousPictureBox.Image = null;
-				}
 
+				}
 				// Reset the previous PictureBox to null
 				previousPictureBox = null;
+
 			}
 			else
 			{
 				// Set the current PictureBox as the previous PictureBox
-				previousPictureBox = currentPictureBox;
+				Cell currentCell = currentPictureBox.Tag as Cell;
+				if (currentCell.Pieces.Count > 0)
+					previousPictureBox = currentPictureBox;
+			}
+		}
+
+
+
+		private void stack2_Click(object sender, EventArgs e)
+		{
+			PictureBox pictureBox = sender as PictureBox;
+			if(pictureBox != null)
+			{
+				previousPictureBox = pictureBox;
+			}
+		}
+
+		private void BlackStack_Click(object sender, EventArgs e)
+		{
+			PictureBox pictureBox = sender as PictureBox;
+			if (pictureBox != null)
+			{
+				previousPictureBox = pictureBox;
 			}
 		}
 

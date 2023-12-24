@@ -87,7 +87,7 @@
 			newGameBtn.Name = "newGameBtn";
 			newGameBtn.Size = new Size(231, 45);
 			newGameBtn.TabIndex = 0;
-			newGameBtn.Text = "Start New Game";
+			newGameBtn.Text = "Restart New Game";
 			newGameBtn.UseVisualStyleBackColor = false;
 			// 
 			// panel2
@@ -125,6 +125,7 @@
 			stack2.SizeMode = PictureBoxSizeMode.Zoom;
 			stack2.TabIndex = 4;
 			stack2.TabStop = false;
+			stack2.Click += stack2_Click;
 			// 
 			// stack1
 			// 
