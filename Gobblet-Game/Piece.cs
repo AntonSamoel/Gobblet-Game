@@ -6,20 +6,14 @@ using System.Threading.Tasks;
 
 namespace Gobblet_Game
 {
-	public class Piece
-	{
-        public int Id { get; set; }
-        public Color Color { get; set; }
-        public bool IsOut { get; set; }
-        public Piece(int id,int size, string playerName)
-		{
-			Id = id;
-			Size = size;
-			PlayerName = playerName;
-		}
+	public class Piece(int id, int size, string playerName, string Color, Image image)
+    {
+        public int Id { get; set; } = id;
+        public string Color { get; set; } = Color;
+        public Image Image { get; set; } = image;
 
-		public int Size { get; set; }
-        public string PlayerName { get; set; } = "Player 1";
+        public int Size { get; set; } = size;
+        public string PlayerName { get; set; } = playerName;
 
     }
 }
