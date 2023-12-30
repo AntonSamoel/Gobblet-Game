@@ -12,8 +12,11 @@ namespace Gobblet_Game
         public int Row { get; set; }
         public int Column { get; set; }
 
-		public Cell( )
+		public Color Color { get; set; }
+		public Cell(int row,int column )
 		{
+			Row = row;
+			Column = column;
 			Pieces = new Stack<Piece>();
 		}
 	}
