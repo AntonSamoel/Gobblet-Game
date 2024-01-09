@@ -6,13 +6,8 @@ using System.Threading.Tasks;
 
 namespace Gobblet_Game
 {
-	public class Board
-	{
-		public Cell[,] Celles { get; set; }
+    public class HandleAI
+    {
 
-        public Board(Cell[,] cells)
-        {
-			Celles = cells; 
-		}
     }
 }

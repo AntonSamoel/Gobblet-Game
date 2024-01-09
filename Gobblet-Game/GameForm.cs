@@ -32,10 +32,21 @@ namespace Gobblet_Game
         Player player1;
         Player player2;
         bool isWinState = false;
-        public GameForm(string player1Name, string player2Name)
+
+        //AI
+        bool Computer1;
+        bool Computer2;
+
+        public GameState gameState;
+        private Board board;
+        
+
+        public GameForm(string player1Name, string player2Name,bool computer1, bool computer2)
         {
             Player1Name = player1Name;
             Player2Name = player2Name;
+            Computer1 = computer1;
+            Computer2 = computer2;
             InitializeComponent();
             IntalizeGame();
         }
@@ -98,8 +109,15 @@ namespace Gobblet_Game
             player2Pieces.Add(stack6);
 
 
-            player1 = new("player1", true, "white", player1Pieces);
-            player2 = new("player2", false, "black", player2Pieces);
+            player1 = new("player1", isMyTurn: true, "white", player1Pieces)
+            {
+                IsComputer = false
+            };
+
+            player2 = new("player2", false, "black", player2Pieces)
+            {
+                IsComputer = Computer2
+            };
 
             p1Name.ForeColor = Color.Green;
             p2Name.ForeColor = Color.Red;
@@ -113,7 +131,8 @@ namespace Gobblet_Game
                     };
                 }
             }
-            
+            board = new(Celles);
+           // gameState = new(board,player1,player2);
             //game = new Game();
         }
         private void CreateBoard()
@@ -180,11 +199,7 @@ namespace Gobblet_Game
                          };
 
                     }
-                    /*    if (i % 2 == 0)
-                        {
-                            pictureBoxes[i, j].Image = Properties.Resources.b3;
-                            Celles[i, j].Pieces.Push(new Piece(25, 3, "Anotn", "black", Properties.Resources.b3));
-                        }*/
+
                     Celles[i, j].Color = pictureBoxes[i, j].BackColor;
                     pictureBoxes[i, j].Tag = Celles[i, j];
 
@@ -230,7 +245,7 @@ namespace Gobblet_Game
         {
             if (sender is PictureBox clickedPictureBox)
             {
-                if (player1Pieces[num].Count > 0)
+                if (player1.Pieces[num].Count > 0)
                 {
                     if (previousPictureBox != null)
                     {
@@ -241,10 +256,11 @@ namespace Gobblet_Game
                         }
                         return;
                     }
-                    if (!player1.IsMyTurn || isWinState)
+
+                    if (!player1.IsMyTurn || isWinState || player1.IsComputer)
                         return;
                     previousPictureBox = clickedPictureBox;
-                    previousPictureBox.Tag = player1Pieces[num];
+                    previousPictureBox.Tag = player1.Pieces[num];
                     previousColor = previousPictureBox.BackColor;
                     previousPictureBox.BackColor = selectedColor;
                 }
@@ -254,7 +270,7 @@ namespace Gobblet_Game
         {
             if (sender is PictureBox clickedPictureBox)
             {
-                if (player2Pieces[num].Count > 0)
+                if (player2.Pieces[num].Count > 0)
                 {     
                     if (previousPictureBox != null)
                     {
@@ -265,10 +281,11 @@ namespace Gobblet_Game
                         }
                         return;
                     }
-                    if (!player2.IsMyTurn || isWinState)
+
+                    if (!player2.IsMyTurn || isWinState || player2.IsComputer)
                         return;
                     previousPictureBox = clickedPictureBox;
-                    previousPictureBox.Tag = player2Pieces[num];
+                    previousPictureBox.Tag = player2.Pieces[num];
                     previousColor = previousPictureBox.BackColor;
                     previousPictureBox.BackColor = selectedColor;
 
@@ -288,7 +305,7 @@ namespace Gobblet_Game
                     HandleExternalPiece(previousPictureBox, currentPictureBox, currentCell);
                     previousPictureBox.BackColor = previousColor;
                     previousPictureBox = null;
-
+                    ComputerPlay();
                     return;
                 }
 
@@ -297,7 +314,8 @@ namespace Gobblet_Game
                     if (ValidMove.IsInternalMoveAvailble(currentCell, PreviosCell))
                     {
                         currentPictureBox.Image = previousPictureBox.Image; // check for null image **
-                        currentCell.Pieces.Push(PreviosCell.Pieces.Pop());
+                        Piece movedPiece = PreviosCell.Pieces.Pop();
+                        currentCell.Pieces.Push(movedPiece);
 
                         if (PreviosCell.Pieces.Count == 0)
                         {
@@ -310,8 +328,13 @@ namespace Gobblet_Game
                             ImageBasedOnSize(previousPictureBox, piece);
                         }
                         WhoWinned();
+
+                        player1.previousMoves.addMove(movedPiece,PreviosCell,currentCell);
+
                         previousPictureBox.BackColor = previousColor;
                         previousPictureBox = null;
+
+                        ComputerPlay();
                     }
 
                 }
@@ -337,6 +360,47 @@ namespace Gobblet_Game
                 }
             }
         }
+        private void ComputerPlay()
+        {
+            Move m = PlayAI();
+
+            int ind = WhichStack(player2, m.p);
+            Cell? cellFrom = m.from, cellTo = m.to;
+            if (ind != -1)
+            {
+                Piece piece = player2.Pieces[ind].Pop();
+                PictureBox box = ChoosePicutre(ind);
+                ImageBasedOnSize(box, player2.Pieces[ind].Peek());
+
+                cellTo.Pieces.Push(piece);
+                pictureBoxes[cellTo.Row, cellTo.Column].Image = piece.Image;
+            }
+            else
+            {
+                cellTo.Pieces.Push(cellFrom.Pieces.Pop());
+                ImageBasedOnSize(pictureBoxes[cellFrom.Row, cellFrom.Column], cellFrom.Pieces.Peek());
+                ImageBasedOnSize(pictureBoxes[cellTo.Row, cellTo.Column], cellTo.Pieces.Peek());
+            }
+            WhoWinned();
+        }
+        private Move PlayAI()
+        {
+            board = new(Celles);
+            gameState = new GameState(board, player1, player2);
+
+            int x = gameState.getBestMove(gameState, 1);
+            return gameState.bestMove;
+        }
+
+        public PictureBox ChoosePicutre(int x)
+        {
+            if (x == 0)
+                return stack4;
+            else if (x == 1)
+                return stack5;
+            else
+                return stack6;
+        }
         private void SwapTurns()
         {
             player1.IsMyTurn = !player1.IsMyTurn;
@@ -352,13 +416,13 @@ namespace Gobblet_Game
 
             if (previousPictureBox.Tag is not Stack<Piece> pieces) return;
 
-            Piece? piece = pieces.Peek();
+            Piece piece = pieces.Peek();
 
             if (ValidMove.IsExternalMoveAvailble(Celles, currentCell, piece))
             {
                 currentPictureBox.Image = previousPictureBox.Image;
                 currentCell.Pieces.Push(pieces.Pop());
-
+                player1.previousMoves.addMove(piece, null, currentCell);
                 if (pieces.Count > 0)
                     piece = pieces!.Peek();
                 else
@@ -368,6 +432,7 @@ namespace Gobblet_Game
 
                 ImageBasedOnSize(previousPictureBox, piece);
                 WhoWinned();
+                
             }
         }
         private static void ImageBasedOnSize(PictureBox pictureBox, Piece? piece)
@@ -396,7 +461,25 @@ namespace Gobblet_Game
             }
             SwapTurns();
         }
-
+        private int WhichStack(Player player,Piece piece)
+        {
+            if (player.Pieces[0].Count > 0)
+            {
+                if (player.Pieces[0].Peek().Id == piece.Id)
+                    return 0;
+            }
+            if (player.Pieces[1].Count > 0)
+            {
+                if (player.Pieces[1].Peek().Id == piece.Id)
+                    return 1;
+            }
+            if (player.Pieces[2].Count > 0)
+            {
+                if (player.Pieces[2].Peek().Id == piece.Id)
+                    return 2;
+            }
+            return -1;
+        }
         private void BlackStack_Click(object sender, EventArgs e)
         {
             PictureBox pictureBox = sender as PictureBox;
@@ -410,7 +493,7 @@ namespace Gobblet_Game
         {
             string p1 = p1Name.Text, p2 = p2Name.Text;
             this.Close();
-            GameForm gameForm = new (p1, p2);
+            GameForm gameForm = new (p1, p2,player1.IsComputer,player2.IsComputer);
             gameForm.Show();
         }
     }

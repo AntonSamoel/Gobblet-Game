@@ -37,12 +37,12 @@ namespace Gobblet_Game
 		{
 			if (pvpRb.Checked)
 			{
-				GameForm gameForm = new GameForm(player1Nametb.Text,player2Nametb.Text);
+				GameForm gameForm = new (player1Nametb.Text,player2Nametb.Text,false,false);
 				gameForm.Show();
 			}
 			else if (pvcRb.Checked)
 			{
-				if (difficultyPlayerVsComputerCb.SelectedItem is not null)
+                /*if (difficultyPlayerVsComputerCb.SelectedItem is not null)
 				{
 					int difficultyLevel = difficultyPlayerVsComputerCb.SelectedIndex;
 					if(difficultyLevel == 0)
@@ -55,8 +55,10 @@ namespace Gobblet_Game
 				else
 				{
 					MessageBox.Show("Please select a difficulty level");
-				}
-			}
+				}*/
+                GameForm gameForm = new(player1Nametb.Text, player2Nametb.Text, false, true);
+                gameForm.Show();
+            }
 			else if (cvcRb.Checked)
 			{
 

@@ -11,6 +11,8 @@ namespace Gobblet_Game
         public string Name { get; set; } = name;
         public bool IsMyTurn { get; set; } = isMyTurn;
 
+        public bool IsComputer {  get; set; }
+        public PreviousMoves previousMoves { get; set; } = new();
         public string Color { get; set; } = color;
         public List<Stack<Piece>> Pieces { get; set; } = pieces;
     }
