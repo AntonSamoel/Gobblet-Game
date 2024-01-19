@@ -409,7 +409,7 @@ namespace Gobblet_Game
             board = new(Celles);
             gameState = new GameState(HandleAI.copyBoard(board),HandleAI.copyPlayer(player1), HandleAI.copyPlayer(player2), true);
 
-            int x = gameState.getBestMove(3,0);
+            int x = gameState.getBestMove(4,0);
             return gameState.bestMove;
         }
 

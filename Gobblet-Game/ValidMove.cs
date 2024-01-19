@@ -8,6 +8,40 @@ namespace Gobblet_Game
 {
     public class ValidMove
     {
+        public static bool isAboutToWin(string color, Cell[,] celles)
+        {
+            for(int i = 0; i < 4; i++)
+            {
+                int num = 0;
+                for(int j = 0; j < 4; j++)
+                {
+                    if (celles[i, j].Pieces.Peek().Color == color) num++;
+                }
+                if (num == 3) return true;
+            }
+            for (int i = 0; i < 4; i++)
+            {
+                int num = 0;
+                for (int j = 0; j < 4; j++)
+                {
+                    if (celles[j, i].Pieces.Peek().Color == color) num++;
+                }
+                if (num == 3) return true;
+            }
+            for (int i = 0; i < 4; i++)
+            {
+                int num = 0;
+                if (celles[i, i].Pieces.Peek().Color == color) num++;
+                if (num == 3) return true;
+            }
+            for (int i = 0; i < 4; i++)
+            {
+                int num = 0;
+                if (celles[i, (3-i)].Pieces.Peek().Color == color) num++;
+                if (num == 3) return true;
+            }
+            return false;
+        }
         public static string IsWinning(string color,Cell[,] cells)
         {
             bool white = false, black = false;
