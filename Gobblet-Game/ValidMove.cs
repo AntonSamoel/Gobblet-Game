@@ -8,37 +8,44 @@ namespace Gobblet_Game
 {
     public class ValidMove
     {
-        public static bool isAboutToWin(string color, Cell[,] celles)
+        public static bool isAboutToWin(string color, Cell[,] celles, Move move)
         {
+            int num = 0;
             for(int i = 0; i < 4; i++)
             {
-                int num = 0;
+                num = 0;
+                int tempj = -1;
                 for(int j = 0; j < 4; j++)
                 {
-                    if (celles[i, j].Pieces.Peek().Color == color) num++;
+                    if (celles[i, j].Pieces.Count() != 0 && celles[i, j].Pieces.Peek().Color == color) num++;
+                    else tempj = j;
                 }
-                if (num == 3) return true;
+                if (num == 3 && tempj == move.to.Column && move.to.Row == i) return true;
             }
             for (int i = 0; i < 4; i++)
             {
-                int num = 0;
+                num = 0;
+                int tempj = -1;
                 for (int j = 0; j < 4; j++)
                 {
-                    if (celles[j, i].Pieces.Peek().Color == color) num++;
+                    if (celles[j, i].Pieces.Count() != 0 && celles[j, i].Pieces.Peek().Color == color) num++;
+                    else tempj = j;
                 }
-                if (num == 3) return true;
+                if (num == 3 && tempj == move.to.Column && move.to.Row == i) return true;
             }
+            num = 0;
             for (int i = 0; i < 4; i++)
             {
-                int num = 0;
-                if (celles[i, i].Pieces.Peek().Color == color) num++;
-                if (num == 3) return true;
+                
+                if (celles[i, i].Pieces.Count() != 0 && celles[i, i].Pieces.Peek().Color == color) num++;
+                else if(num == 3 && i == move.to.Column && move.to.Row == i) return true;
             }
+            num = 0;
             for (int i = 0; i < 4; i++)
             {
-                int num = 0;
-                if (celles[i, (3-i)].Pieces.Peek().Color == color) num++;
-                if (num == 3) return true;
+                
+                if (celles[i, (3-i)].Pieces.Count() != 0 && celles[i, (3-i)].Pieces.Peek().Color == color) num++;
+                else if (num == 3 && (3-i) == move.to.Column && move.to.Row == i) return true;
             }
             return false;
         }
