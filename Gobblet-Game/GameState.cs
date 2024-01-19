@@ -12,6 +12,7 @@ namespace Gobblet_Game
         public Board currentBoard;
         public Player player1;
         public Player player2;
+        public static Move lstMove;
      //   public int alpha;
        // public int beta;
       //  public int totalHeuristicScore; //heuristic
@@ -71,7 +72,7 @@ namespace Gobblet_Game
         //main work
         public int getBestMove(int depth, long id)
         {
-            //if(id==1 && player1.IsMyTurn && ValidMove.isAboutToWin("white", currentBoard.Celles) && !ValidMove.isAboutToWin("black", currentBoard.Celles)) return 
+            if (id == 1 && player1.IsMyTurn && ValidMove.isAboutToWin("white", currentBoard.Celles, lstMove) && !ValidMove.isAboutToWin("black", currentBoard.Celles, lstMove)) return 1000000;
             if (player1.IsMyTurn && (ValidMove.IsWinning("black", currentBoard.Celles) == "black")) return (depth + 1) * 10;
             else if (player2.IsMyTurn && (ValidMove.IsWinning("white",currentBoard.Celles) == "white")) return (depth + 1) * -10;
             // else if (gameState.isDraw()) return 1;
@@ -106,7 +107,7 @@ namespace Gobblet_Game
 
                 player1.IsMyTurn = !player1.IsMyTurn;
                 player2.IsMyTurn = !player2.IsMyTurn;
-
+                lstMove = moves[i];
                 int currScore = getBestMove(depth - 1, id+1); //calculate the heuristic score after making this move
 
                 player1.IsMyTurn = !player1.IsMyTurn;
