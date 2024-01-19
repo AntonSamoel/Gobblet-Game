@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -68,10 +69,11 @@ namespace Gobblet_Game
 
 
         //main work
-        public int getBestMove( int depth,long id)
+        public int getBestMove(int depth, long id)
         {
-            if (player1.IsMyTurn && (ValidMove.IsWinning("black", currentBoard.Celles) == "black")) return (depth + 1) * 100;
-            else if (player2.IsMyTurn && (ValidMove.IsWinning("white",currentBoard.Celles) == "white")) return (depth + 1) * -100;
+            //if(id==1 && player1.IsMyTurn && ValidMove.isAboutToWin("white", currentBoard.Celles) && !ValidMove.isAboutToWin("black", currentBoard.Celles)) return 
+            if (player1.IsMyTurn && (ValidMove.IsWinning("black", currentBoard.Celles) == "black")) return (depth + 1) * 10;
+            else if (player2.IsMyTurn && (ValidMove.IsWinning("white",currentBoard.Celles) == "white")) return (depth + 1) * -10;
             // else if (gameState.isDraw()) return 1;
             else if (depth == 0) return 0;
 
@@ -79,7 +81,7 @@ namespace Gobblet_Game
             List<Move> moves;
             moves = getNextMoves((player1.IsMyTurn ? player1 : player2), currentBoard);
 
-            int maxHeuristic = 0;                       //how many wins under this state
+            int maxHeuristic = int.MinValue;                       //how many wins under this state
             Move maxMove = null;                        //hold the best move that achieve the max heuristic score
             for (int i = 0; i < moves.Count; i++)
             {
@@ -105,7 +107,7 @@ namespace Gobblet_Game
                 player1.IsMyTurn = !player1.IsMyTurn;
                 player2.IsMyTurn = !player2.IsMyTurn;
 
-                int currScore = getBestMove(depth - 1,id+1); //calculate the heuristic score after making this move
+                int currScore = getBestMove(depth - 1, id+1); //calculate the heuristic score after making this move
 
                 player1.IsMyTurn = !player1.IsMyTurn;
                 player2.IsMyTurn = !player2.IsMyTurn;
@@ -124,7 +126,7 @@ namespace Gobblet_Game
                         player2.Pieces[moves[i].stack].Push(tempPeice);
                 }
 
-                if (currScore >= maxHeuristic)
+                if (currScore > maxHeuristic)
                 {
                     maxHeuristic = currScore;
                     maxMove = moves[i];
@@ -135,7 +137,6 @@ namespace Gobblet_Game
             {
                 bestMove = maxMove;
             }
-
             return maxHeuristic;
         }
 
@@ -145,7 +146,26 @@ namespace Gobblet_Game
         List<Move> getNextMoves(Player player, Board currentBoard)
         {
             List<Move> nextMoves = new();
+            List<Tuple<int, Move>> tempNextMoves=new();
 
+            for (int k = 0; k < 3; k++)
+            {
+                if (player.Pieces[k].Count() == 0) continue;
+                Piece piece = player.Pieces[k].Peek();
+                for (int i = 0; i < 4; i++)
+                    for (int j = 0; j < 4; j++)
+                    {
+                        if (ValidMove.IsExternalMoveAvailble(currentBoard.Celles, currentBoard.Celles[i, j], piece))
+                            tempNextMoves.Add(Tuple.Create(piece.Size, new Move(piece, null, currentBoard.Celles[i, j], k)));
+                        //nextMoves.Add(new Move(piece, null, currentBoard.Celles[i, j],k));
+                    }
+            }
+            tempNextMoves = tempNextMoves.OrderByDescending(x => x.Item1).ToList();
+            foreach (var item in tempNextMoves)
+            {
+                nextMoves.Add(item.Item2);
+            }
+            tempNextMoves.Clear();
             for (int i = 0; i < 4; i++)
             {
                 for (int j = 0; j < 4; j++)                                     // from (i, j)
@@ -157,22 +177,17 @@ namespace Gobblet_Game
                             for (int jj = 0; jj < 4; jj++)                      // to (ii, jj)
                             {
                                 if (ii != i && jj != j && ValidMove.IsInternalMoveAvailble(currentBoard.Celles[ii, jj], currentBoard.Celles[i, j]))
-                                    nextMoves.Add(new Move(currentBoard.Celles[i, j].Pieces.Peek(), currentBoard.Celles[i, j], currentBoard.Celles[ii, jj]));
+                                    tempNextMoves.Add(Tuple.Create(currentBoard.Celles[i, j].Pieces.Peek().Size, new Move(currentBoard.Celles[i, j].Pieces.Peek(), currentBoard.Celles[i, j], currentBoard.Celles[ii, jj])));
+                                    //nextMoves.Add(new Move(currentBoard.Celles[i, j].Pieces.Peek(), currentBoard.Celles[i, j], currentBoard.Celles[ii, jj]));
                             }
                         }
                     }
                 }
             }
-            for (int k = 0; k < 3; k++)
+            tempNextMoves = tempNextMoves.OrderByDescending(x => x.Item1).ToList();
+            foreach (var item in tempNextMoves)
             {
-                if (player.Pieces[k].Count() == 0) continue;
-                Piece piece = player.Pieces[k].Peek();
-                for (int i = 0; i < 4; i++)
-                    for (int j = 0; j < 4; j++)
-                    {
-                        if (ValidMove.IsExternalMoveAvailble(currentBoard.Celles, currentBoard.Celles[i, j], piece))
-                            nextMoves.Add(new Move(piece, null, currentBoard.Celles[i, j],k));
-                    }
+                nextMoves.Add(item.Item2);
             }
             return nextMoves;
         }
