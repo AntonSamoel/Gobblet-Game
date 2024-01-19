@@ -408,9 +408,60 @@ namespace Gobblet_Game
         {
             board = new(Celles);
             gameState = new GameState(HandleAI.copyBoard(board),HandleAI.copyPlayer(player1), HandleAI.copyPlayer(player2), true);
+            long currMaxHeuirstic = long.MinValue;
+            List<Move> moves;
+            moves = GameState.getNextMoves((player1.IsMyTurn ? player1 : player2), gameState.currentBoard);
+            Move bestMove = null;
 
-            int x = gameState.getBestMove(4,0);
-            return gameState.bestMove;
+            for (int i = 0; i < moves.Count; i++)
+            {
+                int x, y;
+                Piece tempPeice = moves[i].p;
+                if (moves[i].from is not null)
+                {
+                    x = moves[i].from!.Row;
+                    y = moves[i].from!.Column;
+                    if (gameState.currentBoard.Celles[x, y].Pieces.Count != 0) gameState.currentBoard.Celles[x, y].Pieces.Pop();
+                }
+                else
+                {
+                    if (player1.IsMyTurn)
+                        player1.Pieces[moves[i].stack].Pop();
+                    else
+                        player2.Pieces[moves[i].stack].Pop();
+                }
+                x = moves[i].to!.Row;
+                y = moves[i].to!.Column;
+                gameState.currentBoard.Celles[x, y].Pieces.Push(tempPeice);
+
+                player1.IsMyTurn = !player1.IsMyTurn;
+                player2.IsMyTurn = !player2.IsMyTurn;
+
+                long dfsScore = gameState.getBestMove(2, 0);
+
+                player1.IsMyTurn = !player1.IsMyTurn;
+                player2.IsMyTurn = !player2.IsMyTurn;
+                gameState.currentBoard.Celles[x, y].Pieces.Pop();
+                if (moves[i].from is not null)
+                {
+                    x = moves[i].from!.Row;
+                    y = moves[i].from!.Column;
+                    gameState.currentBoard.Celles[x, y].Pieces.Push(tempPeice!);
+                }
+                else
+                {
+                    if (player1.IsMyTurn)
+                        player1.Pieces[moves[i].stack].Push(tempPeice);
+                    else
+                        player2.Pieces[moves[i].stack].Push(tempPeice);
+                }
+                if (dfsScore > currMaxHeuirstic)
+                {
+                    currMaxHeuirstic = dfsScore;
+                    bestMove = moves[i];
+                }
+            }
+            return bestMove;
         }
 
         public PictureBox ChoosePicutre(int x)
