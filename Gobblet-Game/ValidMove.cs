@@ -31,22 +31,26 @@ namespace Gobblet_Game
                     if (celles[j, i].Pieces.Count() != 0 && celles[j, i].Pieces.Peek().Color == color) num++;
                     else tempj = j;
                 }
-                if (num == 3 && tempj == move.to.Column && move.to.Row == i) return true;
+                if (num == 3 && i == move.to.Column && move.to.Row == tempj) return true;
             }
             num = 0;
+            int tempI = -1;
             for (int i = 0; i < 4; i++)
             {
-                
+
                 if (celles[i, i].Pieces.Count() != 0 && celles[i, i].Pieces.Peek().Color == color) num++;
-                else if(num == 3 && i == move.to.Column && move.to.Row == i) return true;
+                else tempI = i;
             }
+            if (num == 3 && tempI == move.to.Column && move.to.Row == tempI) return true;
             num = 0;
+            tempI = -1;
             for (int i = 0; i < 4; i++)
             {
-                
-                if (celles[i, (3-i)].Pieces.Count() != 0 && celles[i, (3-i)].Pieces.Peek().Color == color) num++;
-                else if (num == 3 && (3-i) == move.to.Column && move.to.Row == i) return true;
+
+                if (celles[i, (3 - i)].Pieces.Count() != 0 && celles[i, (3 - i)].Pieces.Peek().Color == color) num++;
+                else tempI = i;
             }
+            if (num == 3 && (3 - tempI) == move.to.Column && move.to.Row == tempI) return true;
             return false;
         }
         public static string IsWinning(string color,Cell[,] cells)

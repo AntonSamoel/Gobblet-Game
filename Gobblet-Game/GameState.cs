@@ -12,7 +12,7 @@ namespace Gobblet_Game
         public Board currentBoard;
         public Player player1;
         public Player player2;
-        public static Move lstMove;
+        //public static Move lstMove;
      //   public int alpha;
        // public int beta;
       //  public int totalHeuristicScore; //heuristic
@@ -29,6 +29,8 @@ namespace Gobblet_Game
         //Game constructor to game state with current board state 
         public GameState(Board b, Player player1, Player player2, bool reverse = false)
         {
+            //player1.IsMyTurn = false;
+            //player2.IsMyTurn = true;
             /*if (reverse)
             {
                 player2.IsMyTurn = true;
@@ -70,23 +72,52 @@ namespace Gobblet_Game
         
 
         //main work
-        public long getBestMove(int depth, long id)
+        public long getBestMove(int depth, long id, Move lstMove)
         {
-            if (id == 0 && player1.IsMyTurn
+            /*if (id == 0 && player1.IsMyTurn
                 && ValidMove.isAboutToWin("white", currentBoard.Celles, lstMove)
                 && !ValidMove.isAboutToWin("black", currentBoard.Celles, lstMove))
-                return -1000000000;
-            else if (player1.IsMyTurn && (ValidMove.IsWinning("black", currentBoard.Celles) == "black")) return (depth + 1) * 10;
-            else if (player2.IsMyTurn && (ValidMove.IsWinning("white",currentBoard.Celles) == "white")) return (5-depth) * -10;
-            // else if (gameState.isDraw()) return 1;
-            else if (depth == 0) return 0;
+            {
 
+                return 1000000000;
+            }
+            else if (player1.IsMyTurn && ValidMove.IsWinning("black", currentBoard.Celles) == "black")
+            {
+                if (ValidMove.IsWinning("white", currentBoard.Celles) == "white") return -1000000000;               // special case sent to el mo3ed
+                return (depth + 1) * 10;
+            }
+            else if (player2.IsMyTurn && ValidMove.IsWinning("white", currentBoard.Celles) == "white")
+            {
+                if (ValidMove.IsWinning("black", currentBoard.Celles) == "black") return 1000000000;                // special case sent to el mo3ed
+                return (5 - depth) * -10;
+            }
+            // else if (gameState.isDraw()) return 1;
+            else if(depth==0) reutrn 0;*/
+            if (depth == 0)
+            {
+                if (player1.IsMyTurn && ValidMove.isAboutToWin("white", currentBoard.Celles, lstMove) && !ValidMove.isAboutToWin("black", currentBoard.Celles, lstMove))
+                {
+                    return 1000000000;
+                }
+                else if (player1.IsMyTurn && ValidMove.IsWinning("black", currentBoard.Celles) == "black")
+                {
+                    if (ValidMove.IsWinning("white", currentBoard.Celles) == "white") return -1000000000;               // special case sent to el mo3ed
+                    return (depth + 1) * 10;
+                }
+                else if (player2.IsMyTurn && ValidMove.IsWinning("white", currentBoard.Celles) == "white")
+                {
+                    if (ValidMove.IsWinning("black", currentBoard.Celles) == "black") return 1000000000;                // special case sent to el mo3ed
+                    return (5 - depth) * -10;
+                }
+
+                return 0;
+            }
             //get all possible moves in this state
             List<Move> moves;
             moves = getNextMoves((player1.IsMyTurn ? player1 : player2), currentBoard);
 
-            long maxHeuristic = 0;                       //how many wins under this state
-            //Move maxMove = null;                        //hold the best move that achieve the max heuristic score
+            long maxHeuristic = 0;                          //how many wins under this state
+            //Move maxMove = null;                          //hold the best move that achieve the max heuristic score
             for (int i = 0; i < moves.Count; i++)
             {
                 int x, y;
@@ -111,7 +142,7 @@ namespace Gobblet_Game
                 player1.IsMyTurn = !player1.IsMyTurn;
                 player2.IsMyTurn = !player2.IsMyTurn;
                 lstMove = moves[i];
-                maxHeuristic += getBestMove(depth - 1, id+1); //calculate the heuristic score after making this move
+                maxHeuristic += getBestMove(depth - 1, id + 1, lstMove); //calculate the heuristic score after making this move
 
                 player1.IsMyTurn = !player1.IsMyTurn;
                 player2.IsMyTurn = !player2.IsMyTurn;

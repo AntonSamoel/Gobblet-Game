@@ -111,7 +111,7 @@ namespace Gobblet_Game
 
             player1 = new("player1", isMyTurn: true, "white", player1Pieces)
             {
-                IsComputer = false
+                IsComputer = Computer1
             };
 
             player2 = new("player2", isMyTurn: false, "black", player2Pieces)
@@ -302,11 +302,14 @@ namespace Gobblet_Game
 
                 if (previousPictureBox.Tag is not Cell PreviosCell)
                 {
-                    if (HandleExternalPiece(previousPictureBox, currentPictureBox, currentCell) == 1)
-                        return;
+                    int ok = HandleExternalPiece(previousPictureBox, currentPictureBox, currentCell);
+
                     previousPictureBox.BackColor = previousColor;
                     previousPictureBox = null;
-                    ComputerPlay();
+                    if (ok == -1)
+                    {
+                        if((player1.IsMyTurn && player1.IsComputer) || (player2.IsMyTurn && player2.IsComputer)) ComputerPlay();
+                    }
                     return;
                 }
 
@@ -336,7 +339,7 @@ namespace Gobblet_Game
                         previousPictureBox.BackColor = previousColor;
                         previousPictureBox = null;
 
-                        ComputerPlay();
+                        if ((player1.IsMyTurn && player1.IsComputer) || (player2.IsMyTurn && player2.IsComputer)) ComputerPlay();
 
                     }
 
@@ -407,10 +410,11 @@ namespace Gobblet_Game
         private Move PlayAI()
         {
             board = new(Celles);
+            // are the board, player1 and 2 changed before being given as copies here?
             gameState = new GameState(HandleAI.copyBoard(board),HandleAI.copyPlayer(player1), HandleAI.copyPlayer(player2), true);
-            long currMaxHeuirstic = long.MinValue;
             List<Move> moves;
-            moves = GameState.getNextMoves((player1.IsMyTurn ? player1 : player2), gameState.currentBoard);
+            moves = GameState.getNextMoves(gameState.player2, gameState.currentBoard);    // at the beginning I'll get all the moves player2 will can play as its the computer's turn.
+            long currMaxHeuirstic = long.MinValue;
             Move bestMove = null;
 
             for (int i = 0; i < moves.Count; i++)
@@ -425,22 +429,22 @@ namespace Gobblet_Game
                 }
                 else
                 {
-                    if (player1.IsMyTurn)
-                        player1.Pieces[moves[i].stack].Pop();
+                    if (gameState.player1.IsMyTurn)
+                        gameState.player1.Pieces[moves[i].stack].Pop();
                     else
-                        player2.Pieces[moves[i].stack].Pop();
+                        gameState.player2.Pieces[moves[i].stack].Pop();
                 }
                 x = moves[i].to!.Row;
                 y = moves[i].to!.Column;
                 gameState.currentBoard.Celles[x, y].Pieces.Push(tempPeice);
 
-                player1.IsMyTurn = !player1.IsMyTurn;
-                player2.IsMyTurn = !player2.IsMyTurn;
+                gameState.player1.IsMyTurn = !gameState.player1.IsMyTurn;
+                gameState.player2.IsMyTurn = !gameState.player2.IsMyTurn;
 
-                long dfsScore = gameState.getBestMove(2, 0);
+                long dfsScore = gameState.getBestMove(3, 0, moves[i]);
 
-                player1.IsMyTurn = !player1.IsMyTurn;
-                player2.IsMyTurn = !player2.IsMyTurn;
+                gameState.player1.IsMyTurn = !gameState.player1.IsMyTurn;               // should be like the one before the recursion
+                gameState.player2.IsMyTurn = !gameState.player2.IsMyTurn;               // same
                 gameState.currentBoard.Celles[x, y].Pieces.Pop();
                 if (moves[i].from is not null)
                 {
@@ -450,10 +454,10 @@ namespace Gobblet_Game
                 }
                 else
                 {
-                    if (player1.IsMyTurn)
-                        player1.Pieces[moves[i].stack].Push(tempPeice);
+                    if (gameState.player1.IsMyTurn)
+                        gameState.player1.Pieces[moves[i].stack].Push(tempPeice);
                     else
-                        player2.Pieces[moves[i].stack].Push(tempPeice);
+                        gameState.player2.Pieces[moves[i].stack].Push(tempPeice);
                 }
                 if (dfsScore > currMaxHeuirstic)
                 {
@@ -461,6 +465,7 @@ namespace Gobblet_Game
                     bestMove = moves[i];
                 }
             }
+
             return bestMove;
         }
 
@@ -537,7 +542,7 @@ namespace Gobblet_Game
             else
             {
                 SwapTurns();
-                return 0;
+                return -1;
             }
         }
         public static int WhichStack(Player player,Piece piece)
