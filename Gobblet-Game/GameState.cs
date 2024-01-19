@@ -71,7 +71,7 @@ namespace Gobblet_Game
         //main work
         public int getBestMove(int depth, long id)
         {
-            //if(id==1 && player1.IsMyTurn && ValidMove.isAboutToWin("white", currentBoard.Celles) && !ValidMove.isAboutToWin("black", currentBoard.Celles)) return 
+            if (id == 1 && player1.IsMyTurn && ValidMove.isAboutToWin("white", currentBoard.Celles) && !ValidMove.isAboutToWin("black", currentBoard.Celles)) return 1000000;
             if (player1.IsMyTurn && (ValidMove.IsWinning("black", currentBoard.Celles) == "black")) return (depth + 1) * 10;
             else if (player2.IsMyTurn && (ValidMove.IsWinning("white",currentBoard.Celles) == "white")) return (depth + 1) * -10;
             // else if (gameState.isDraw()) return 1;
