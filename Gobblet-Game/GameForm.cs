@@ -407,7 +407,7 @@ namespace Gobblet_Game
             }
             WhoWinned();
         }
-        private Move PlayAI()
+        /*private Move PlayAI()
         {
             board = new(Celles);
             // are the board, player1 and 2 changed before being given as copies here?
@@ -467,8 +467,72 @@ namespace Gobblet_Game
             }
 
             return bestMove;
-        }
+        }*/
+        //with alpha beta
+        // ==========================================================
+        private Move PlayAI()
+        {
+            board = new(Celles);
+            // are the board, player1 and 2 changed before being given as copies here?
+            gameState = new GameState(HandleAI.copyBoard(board), HandleAI.copyPlayer(player1), HandleAI.copyPlayer(player2), true);
+            List<Move> moves;
+            moves = GameState.getNextMoves(gameState.player2, gameState.currentBoard);    // at the beginning I'll get all the moves player2 will can play as its the computer's turn.
+            Move bestMove = null;
+            long alpha = long.MinValue, beta = long.MaxValue;
 
+            for (int i = 0; i < moves.Count; i++)
+            {
+                int x, y;
+                Piece tempPeice = moves[i].p;
+                if (moves[i].from is not null)
+                {
+                    x = moves[i].from!.Row;
+                    y = moves[i].from!.Column;
+                    if (gameState.currentBoard.Celles[x, y].Pieces.Count != 0) gameState.currentBoard.Celles[x, y].Pieces.Pop();
+                }
+                else
+                {
+                    if (gameState.player1.IsMyTurn)
+                        gameState.player1.Pieces[moves[i].stack].Pop();
+                    else
+                        gameState.player2.Pieces[moves[i].stack].Pop();
+                }
+                x = moves[i].to!.Row;
+                y = moves[i].to!.Column;
+                gameState.currentBoard.Celles[x, y].Pieces.Push(tempPeice);
+
+                gameState.player1.IsMyTurn = !gameState.player1.IsMyTurn;
+                gameState.player2.IsMyTurn = !gameState.player2.IsMyTurn;
+                if (bestMove == null) bestMove = moves[i];
+                long dfsScore = gameState.getBestMoveAB(alpha,beta, true,3, moves[i]);
+                if(dfsScore > alpha)
+                {
+                    alpha = dfsScore;
+                    bestMove = moves[i];
+                }
+                
+
+                gameState.player1.IsMyTurn = !gameState.player1.IsMyTurn;               // should be like the one before the recursion
+                gameState.player2.IsMyTurn = !gameState.player2.IsMyTurn;               // same
+                gameState.currentBoard.Celles[x, y].Pieces.Pop();
+                if (moves[i].from is not null)
+                {
+                    x = moves[i].from!.Row;
+                    y = moves[i].from!.Column;
+                    gameState.currentBoard.Celles[x, y].Pieces.Push(tempPeice!);
+                }
+                else
+                {
+                    if (gameState.player1.IsMyTurn)
+                        gameState.player1.Pieces[moves[i].stack].Push(tempPeice);
+                    else
+                        gameState.player2.Pieces[moves[i].stack].Push(tempPeice);
+                }
+                
+            }
+
+            return bestMove;
+        }
         public PictureBox ChoosePicutre(int x)
         {
             if (x == 0)
