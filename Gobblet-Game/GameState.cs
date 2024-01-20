@@ -117,11 +117,12 @@ namespace Gobblet_Game
         public long getBestMoveAB(long alpha, long beta,bool isMax, int depth, Move lstMove)
         {
 
-            if (depth == 0)
+            if (0 == 0)
             {
-                if (player1.IsMyTurn && ValidMove.isAboutToWin("white", currentBoard.Celles, lstMove) && !ValidMove.isAboutToWin("black", currentBoard.Celles, lstMove))
+                if (player1.IsMyTurn && ValidMove.isAboutToWin("white", currentBoard.Celles, lstMove) /*&& !ValidMove.isAboutToWin("black", currentBoard.Celles, lstMove)*/)
                 {
-                    return 1000000000 * lstMove.p.Size;
+                    if(lstMove.p.Size == 4)
+                        return 1000000000 * lstMove.p.Size;
                 }
                 else if (player1.IsMyTurn && ValidMove.IsWinning("black", currentBoard.Celles) == "black")
                 {
@@ -133,9 +134,11 @@ namespace Gobblet_Game
                     if (ValidMove.IsWinning("black", currentBoard.Celles) == "black") return 1000000000;                // special case sent to el mo3ed
                     return (5 - depth) * -10;
                 }
-
-                if (isMax) return alpha;
-                return beta;
+                if (depth == 0)
+                {
+                    if (isMax) return alpha;
+                    return beta;
+                }
             }
    
 
@@ -147,47 +150,10 @@ namespace Gobblet_Game
 
             for (int i = 0; i < moves.Count; i++)
             {
-                int x, y;
-                Piece tempPeice = moves[i].p;
-                if (moves[i].from is not null)
-                {
-                    x = moves[i].from!.Row;
-                    y = moves[i].from!.Column;
-                    if (currentBoard.Celles[x, y].Pieces.Count != 0) currentBoard.Celles[x, y].Pieces.Pop();
-                }
-                else
-                {
-                    if (player1.IsMyTurn)
-                        player1.Pieces[moves[i].stack].Pop();
-                    else
-                        player2.Pieces[moves[i].stack].Pop();
-                }
-                x = moves[i].to!.Row;
-                y = moves[i].to!.Column;
-                currentBoard.Celles[x, y].Pieces.Push(tempPeice);
-
-                player1.IsMyTurn = !player1.IsMyTurn;
-                player2.IsMyTurn = !player2.IsMyTurn;
+                update(moves[i]);
                 lstMove = moves[i];
-
                 long score = getBestMoveAB(alpha, beta, !isMax, depth - 1, lstMove);
-
-                player1.IsMyTurn = !player1.IsMyTurn;
-                player2.IsMyTurn = !player2.IsMyTurn;
-                currentBoard.Celles[x, y].Pieces.Pop();
-                if (moves[i].from is not null)
-                {
-                    x = moves[i].from!.Row;
-                    y = moves[i].from!.Column;
-                    currentBoard.Celles[x, y].Pieces.Push(tempPeice!);
-                }
-                else
-                {
-                    if (player1.IsMyTurn)
-                        player1.Pieces[moves[i].stack].Push(tempPeice);
-                    else
-                        player2.Pieces[moves[i].stack].Push(tempPeice);
-                }
+                rollBack(moves[i]);
                 //alpha beta implementation
                 if (isMax)
                 {
@@ -205,7 +171,53 @@ namespace Gobblet_Game
             if (isMax) return alpha;
             return beta;
         }
-        //must return list of valid moves 
+        private void update(Move move)
+        {
+            int x, y;
+            Piece tempPeice = move.p;
+            if (move.from is not null)
+            {
+                x = move.from!.Row;
+                y = move.from!.Column;
+                if (currentBoard.Celles[x, y].Pieces.Count != 0) currentBoard.Celles[x, y].Pieces.Pop();
+            }
+            else
+            {
+                if (player1.IsMyTurn)
+                    player1.Pieces[move.stack].Pop();
+                else
+                    player2.Pieces[move.stack].Pop();
+            }
+            x = move.to!.Row;
+            y = move.to!.Column;
+            currentBoard.Celles[x, y].Pieces.Push(tempPeice);
+
+            player1.IsMyTurn = !player1.IsMyTurn;
+            player2.IsMyTurn = !player2.IsMyTurn;
+        }
+        private void rollBack(Move move)
+        {
+            Piece tempPeice = move.p;
+            int x, y;
+            x = move.to!.Row;
+            y = move.to!.Column;
+            player1.IsMyTurn = !player1.IsMyTurn;
+            player2.IsMyTurn = !player2.IsMyTurn;
+            currentBoard.Celles[x, y].Pieces.Pop();
+            if (move.from is not null)
+            {
+                x = move.from!.Row;
+                y = move.from!.Column;
+                currentBoard.Celles[x, y].Pieces.Push(tempPeice!);
+            }
+            else
+            {
+                if (player1.IsMyTurn)
+                    player1.Pieces[move.stack].Push(tempPeice);
+                else
+                    player2.Pieces[move.stack].Push(tempPeice);
+            }
+        }
         //must return list of valid moves 
         public static List<Move> getNextMoves(Player player, Board currentBoard)
         {

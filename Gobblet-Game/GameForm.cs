@@ -504,7 +504,7 @@ namespace Gobblet_Game
                 gameState.player1.IsMyTurn = !gameState.player1.IsMyTurn;
                 gameState.player2.IsMyTurn = !gameState.player2.IsMyTurn;
                 if (bestMove == null) bestMove = moves[i];
-                long dfsScore = gameState.getBestMoveAB(alpha,beta, true,3, moves[i]);
+                long dfsScore = gameState.getBestMoveAB(alpha,beta, false,3, moves[i]);
                 if(dfsScore > alpha)
                 {
                     alpha = dfsScore;
