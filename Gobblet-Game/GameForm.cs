@@ -504,10 +504,28 @@ namespace Gobblet_Game
                 gameState.player1.IsMyTurn = !gameState.player1.IsMyTurn;
                 gameState.player2.IsMyTurn = !gameState.player2.IsMyTurn;
                 if (bestMove == null) bestMove = moves[i];
-                long dfsScore = gameState.getBestMoveAB(alpha,beta, true,3, moves[i]);
-                if(dfsScore > alpha)
+
+                long score = long.MinValue;
+                if (gameState.player1.IsMyTurn && ValidMove.isAboutToWin("white", gameState.currentBoard.Celles, moves[i]) /*&& !ValidMove.isAboutToWin("black", currentBoard.Celles, lstMove)*/)
                 {
-                    alpha = dfsScore;
+                    score += 100000000 * moves[i].p.Size;
+                }
+                else if (gameState.player1.IsMyTurn && ValidMove.IsWinning("black", gameState.currentBoard.Celles) == "black")
+                {
+                    if (ValidMove.IsWinning("white", gameState.currentBoard.Celles) == "white") score = long.MinValue;               // special case sent to el mo3ed
+                    else score = long.MaxValue;
+                }
+                else if (gameState.player2.IsMyTurn && ValidMove.IsWinning("white", gameState.currentBoard.Celles) == "white")
+                {
+                    if (ValidMove.IsWinning("black", gameState.currentBoard.Celles) == "black") score = long.MaxValue;                // special case sent to el mo3ed
+                    else score = long.MinValue;
+                }
+
+
+                score = gameState.getBestMoveAB(alpha,beta, false,1,score /*moves[i]*/);
+                if(score > alpha)
+                {
+                    alpha = score;
                     bestMove = moves[i];
                 }
                 
