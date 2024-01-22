@@ -505,24 +505,26 @@ namespace Gobblet_Game
                 gameState.player2.IsMyTurn = !gameState.player2.IsMyTurn;
                 if (bestMove == null) bestMove = moves[i];
 
-                long score = long.MinValue;
+                long score = 0;
                 if (gameState.player1.IsMyTurn && ValidMove.isAboutToWin("white", gameState.currentBoard.Celles, moves[i]) /*&& !ValidMove.isAboutToWin("black", currentBoard.Celles, lstMove)*/)
                 {
-                    score += 100000000 * moves[i].p.Size;
+                    score += 1000 * moves[i].p.Size;
                 }
                 else if (gameState.player1.IsMyTurn && ValidMove.IsWinning("black", gameState.currentBoard.Celles) == "black")
                 {
-                    if (ValidMove.IsWinning("white", gameState.currentBoard.Celles) == "white") score = long.MinValue;               // special case sent to el mo3ed
-                    else score = long.MaxValue;
+                    if (ValidMove.IsWinning("white", gameState.currentBoard.Celles) == "white") score -= 10000;               // special case sent to el mo3ed
+                    else 
+                        score += 10000;
                 }
                 else if (gameState.player2.IsMyTurn && ValidMove.IsWinning("white", gameState.currentBoard.Celles) == "white")
                 {
-                    if (ValidMove.IsWinning("black", gameState.currentBoard.Celles) == "black") score = long.MaxValue;                // special case sent to el mo3ed
-                    else score = long.MinValue;
+                    if (ValidMove.IsWinning("black", gameState.currentBoard.Celles) == "black") score += 10000;                // special case sent to el mo3ed
+                    else 
+                        score -= 10000;
                 }
 
 
-                score = gameState.getBestMoveAB(alpha,beta, false,1,score /*moves[i]*/);
+                score = gameState.getBestMoveAB(alpha,beta, false,4,score /*moves[i]*/);
                 if(score > alpha)
                 {
                     alpha = score;

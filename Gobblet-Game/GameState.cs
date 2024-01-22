@@ -5,6 +5,7 @@ using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace Gobblet_Game
 {
@@ -123,56 +124,71 @@ namespace Gobblet_Game
                 return beta;*/
                 return score;
             }
-   
 
+            
 
             //get all possible moves in this state
             List<Move> moves;
             moves = getNextMoves((player1.IsMyTurn ? player1 : player2), currentBoard);
-
+            if (depth == 1)
+                isMax = !isMax;
 
             for (int i = 0; i < moves.Count; i++)
             {
                 Update(moves[i]);
                 // lstMove = moves[i];
 
-               // long score = long.MinValue;
-                if (player1.IsMyTurn && ValidMove.isAboutToWin("white", currentBoard.Celles, moves[i]) /*&& !ValidMove.isAboutToWin("black", currentBoard.Celles, lstMove)*/)
-                {
-                    score += 100000000 * moves[i].p.Size;
-                }
-                else if (player1.IsMyTurn && ValidMove.IsWinning("black", currentBoard.Celles) == "black")
-                {
-                    if (ValidMove.IsWinning("white", currentBoard.Celles) == "white") score = long.MinValue;               // special case sent to el mo3ed
-                    else score = long.MaxValue;
-                }
-                else if (player2.IsMyTurn && ValidMove.IsWinning("white", currentBoard.Celles) == "white")
-                {
-                    if (ValidMove.IsWinning("black", currentBoard.Celles) == "black") score = long.MaxValue;                // special case sent to el mo3ed
-                    else score = long.MinValue;
-                }
+                // long score = long.MinValue;
+
+                score += HeustricComp(player1, player2, currentBoard, moves[i]);
+
 
                 score = getBestMoveAB(alpha, beta, !isMax, depth - 1,score/*, moves[i]*/);
 
                 RollBack(moves[i]);
 
                 //alpha beta implementation
-                if (isMax)
-                {
-                    alpha = long.Max(alpha, score);
-                    if (alpha >= beta) return alpha;
-                }
-                else
-                {
-                    beta = long.Min(beta, score);
-                    if (alpha >= beta) return beta;
-                }
+
+                    if (isMax)
+                    {
+                        long temp = alpha;
+                        alpha = long.Max(alpha, score);
+                        if (alpha >= beta) return temp;
+                    }
+                    else
+                    {
+                        long temp = beta;
+                        beta = long.Min(beta, score);
+                        if (alpha >= beta) return temp;
+                    }
+                
                 //=========================================
 
             }
-             if (isMax) return alpha;
+
+            if (isMax) return alpha;
              return beta;
             //return score;
+        }
+        public static long HeustricComp(Player player1,Player player2,Board currentBoard, Move move)
+        {
+            if (player1.IsMyTurn && ValidMove.isAboutToWin("white", currentBoard.Celles, move) /*&& !ValidMove.isAboutToWin("black", currentBoard.Celles, lstMove)*/)
+            {
+                return  1000 * move.p.Size;
+            }
+            else if (player1.IsMyTurn && ValidMove.IsWinning("black", currentBoard.Celles) == "black")
+            {
+                // if (ValidMove.IsWinning("white", currentBoard.Celles) == "white") score = long.MinValue + 100;               // special case sent to el mo3ed
+                //else 
+                return 10000;
+            }
+            else if (player2.IsMyTurn && ValidMove.IsWinning("white", currentBoard.Celles) == "white")
+            {
+                // if (ValidMove.IsWinning("black", currentBoard.Celles) == "black") score = long.MaxValue - 100;                // special case sent to el mo3ed
+                // else
+                return -10000;
+            }
+            return 0;
         }
         private void Update(Move move)
         {

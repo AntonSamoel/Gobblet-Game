@@ -10,7 +10,7 @@ namespace Gobblet_Game
     {
         public static bool isAboutToWin(string color, Cell[,] celles, Move move)
         {
-            int num = 0;
+            int num;
             for(int i = 0; i < 4; i++)
             {
                 num = 0;
