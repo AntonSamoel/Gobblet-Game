@@ -509,7 +509,7 @@ namespace Gobblet_Game
 
                 score += GameState.HeustricComp(gameState.player1, gameState.player2, gameState.currentBoard, moves[i], ref ok,5);
 
-                score = gameState.getBestMoveAB(alpha,beta, false,4,score,ref ok /*moves[i]*/);
+                score = gameState.getBestMoveAB(alpha,beta, false,2,score,ref ok /*moves[i]*/);
 
                 if(score > alpha)
                 {

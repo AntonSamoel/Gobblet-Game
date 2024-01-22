@@ -124,9 +124,6 @@ namespace Gobblet_Game
                 return beta;*/
                 return score;
             }
-
-            
-
             //get all possible moves in this state
             List<Move> moves;
             moves = getNextMoves((player1.IsMyTurn ? player1 : player2), currentBoard);
@@ -172,27 +169,27 @@ namespace Gobblet_Game
         }
         public static long HeustricComp(Player player1,Player player2,Board currentBoard, Move move,ref bool ok,long depth)
         {
-            if (player1.IsMyTurn && ValidMove.isAboutToWin("white", currentBoard.Celles, move) /*&& !ValidMove.isAboutToWin("black", currentBoard.Celles, lstMove)*/)
+            if (player1.IsMyTurn && ValidMove.isAboutToWin("white", currentBoard.Celles, move) && !ValidMove.isAboutToWin("black", currentBoard.Celles, move))
             {
-                return  1000 * move.p.Size;
+                return   move.p.Size * depth;
             }
-            else if (player2.IsMyTurn && ValidMove.isAboutToWin("black", currentBoard.Celles, move))
+            else if (player2.IsMyTurn && ValidMove.isAboutToWin("black", currentBoard.Celles, move) && !ValidMove.isAboutToWin("white", currentBoard.Celles, move))
             {
-                return -1000 * move.p.Size ;
+                return -  move.p.Size * depth;
             }
             else if (player1.IsMyTurn && ValidMove.IsWinning("black", currentBoard.Celles) == "black")
             {
                 // if (ValidMove.IsWinning("white", currentBoard.Celles) == "white") score = long.MinValue + 100;               // special case sent to el mo3ed
                 //else 
                 ok = false;
-                return 10000 * depth;
+                return  depth;
             }
             else if ( player2.IsMyTurn && ValidMove.IsWinning("white", currentBoard.Celles) == "white")
             {
                 // if (ValidMove.IsWinning("black", currentBoard.Celles) == "black") score = long.MaxValue - 100;                // special case sent to el mo3ed
                 // else
                 ok = false;
-                return -10000 * depth;
+                return - depth;
             }
             return 0;
         }
