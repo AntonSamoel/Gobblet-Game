@@ -115,7 +115,7 @@ namespace Gobblet_Game
             return maxHeuristic;
         }
         */
-        public long getBestMoveAB(long alpha, long beta,bool isMax, int depth,long score/*, Move lstMove*/)
+        public long getBestMoveAB(long alpha, long beta,bool isMax, int depth,long score,ref bool ok/*, Move lstMove*/)
         {
 
             if (depth == 0)
@@ -140,10 +140,10 @@ namespace Gobblet_Game
 
                 // long score = long.MinValue;
 
-                score += HeustricComp(player1, player2, currentBoard, moves[i]);
+                score += HeustricComp(player1, player2, currentBoard, moves[i],ref ok,depth);
 
 
-                score = getBestMoveAB(alpha, beta, !isMax, depth - 1,score/*, moves[i]*/);
+                score = getBestMoveAB(alpha, beta, !isMax, depth - 1,score,ref ok /*, moves[i]*/);
 
                 RollBack(moves[i]);
 
@@ -170,23 +170,29 @@ namespace Gobblet_Game
              return beta;
             //return score;
         }
-        public static long HeustricComp(Player player1,Player player2,Board currentBoard, Move move)
+        public static long HeustricComp(Player player1,Player player2,Board currentBoard, Move move,ref bool ok,long depth)
         {
             if (player1.IsMyTurn && ValidMove.isAboutToWin("white", currentBoard.Celles, move) /*&& !ValidMove.isAboutToWin("black", currentBoard.Celles, lstMove)*/)
             {
                 return  1000 * move.p.Size;
             }
+            else if (player2.IsMyTurn && ValidMove.isAboutToWin("black", currentBoard.Celles, move))
+            {
+                return -1000 * move.p.Size ;
+            }
             else if (player1.IsMyTurn && ValidMove.IsWinning("black", currentBoard.Celles) == "black")
             {
                 // if (ValidMove.IsWinning("white", currentBoard.Celles) == "white") score = long.MinValue + 100;               // special case sent to el mo3ed
                 //else 
-                return 10000;
+                ok = false;
+                return 10000 * depth;
             }
-            else if (player2.IsMyTurn && ValidMove.IsWinning("white", currentBoard.Celles) == "white")
+            else if ( player2.IsMyTurn && ValidMove.IsWinning("white", currentBoard.Celles) == "white")
             {
                 // if (ValidMove.IsWinning("black", currentBoard.Celles) == "black") score = long.MaxValue - 100;                // special case sent to el mo3ed
                 // else
-                return -10000;
+                ok = false;
+                return -10000 * depth;
             }
             return 0;
         }
