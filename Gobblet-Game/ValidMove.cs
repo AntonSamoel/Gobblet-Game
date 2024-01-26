@@ -8,49 +8,49 @@ namespace Gobblet_Game
 {
     public class ValidMove
     {
-        public static bool isAboutToWin(string color, Cell[,] celles, Move move)
+        public static bool isAboutToWin(string color, Cell[,] celles, Cell cell)
         {
             int num;
-            for(int i = 0; i < 4; i++)
-            {
+          //  for(int i = 0; i < 4; i++)
+          //  {
                 num = 0;
-                int tempj = -1;
+            //    int tempj = -1;
                 for(int j = 0; j < 4; j++)
                 {
-                    if (celles[i, j].Pieces.Count() != 0 && celles[i, j].Pieces.Peek().Color == color) num++;
-                    else tempj = j;
+                    if (celles[cell.Row, j].Pieces.Count != 0 && celles[cell.Row, j].Pieces.Peek().Color == color) num++;
+                    //else tempj = j;
                 }
-                if (num == 3 && tempj == move.to.Column && move.to.Row == i) return true;
-            }
-            for (int i = 0; i < 4; i++)
-            {
+                if (num >= 3 /*&& tempj == cell.Column && cell.Row == i*/) return true;
+          //  }
+          //  for (int i = 0; i < 4; i++)
+          //  {
                 num = 0;
-                int tempj = -1;
+            //    tempj = -1;
                 for (int j = 0; j < 4; j++)
                 {
-                    if (celles[j, i].Pieces.Count() != 0 && celles[j, i].Pieces.Peek().Color == color) num++;
-                    else tempj = j;
+                    if (celles[j, cell.Column].Pieces.Count != 0 && celles[j, cell.Column].Pieces.Peek().Color == color) num++;
+                    //else tempj = j;
                 }
-                if (num == 3 && i == move.to.Column && move.to.Row == tempj) return true;
-            }
+                if (num >= 3 /*&& i == cell.Column && cell.Row == tempj*/) return true;
+          //  }
             num = 0;
-            int tempI = -1;
+           // int tempI = -1;
             for (int i = 0; i < 4; i++)
             {
 
-                if (celles[i, i].Pieces.Count() != 0 && celles[i, i].Pieces.Peek().Color == color) num++;
-                else tempI = i;
+                if (celles[i, i].Pieces.Count != 0 && celles[i, i].Pieces.Peek().Color == color && cell.Column == cell.Row) num++;
+               // else tempI = i;
             }
-            if (num == 3 && tempI == move.to.Column && move.to.Row == tempI) return true;
+            if (num >= 3 /*&& tempI == cell.Column && cell.Row == tempI*/) return true;
             num = 0;
-            tempI = -1;
+           // tempI = -1;
             for (int i = 0; i < 4; i++)
             {
 
-                if (celles[i, (3 - i)].Pieces.Count() != 0 && celles[i, (3 - i)].Pieces.Peek().Color == color) num++;
-                else tempI = i;
+                if (celles[i, (3 - i)].Pieces.Count != 0 && celles[i, (3 - i)].Pieces.Peek().Color == color && (cell.Row+cell.Column == 3)) num++;
+                //else tempI = i;
             }
-            if (num == 3 && (3 - tempI) == move.to.Column && move.to.Row == tempI) return true;
+            if (num >= 3 /*&& (3 - tempI) == cell.Column && cell.Row == tempI*/) return true;
             return false;
         }
         public static string IsWinning(string color,Cell[,] cells)
@@ -192,7 +192,8 @@ namespace Gobblet_Game
             }
             //check 1 diagonall
             count = 0;
-            int x1 = x - Math.Min(x, y), y1 = y - Math.Min(x, y);
+            //int x1 = x - Math.Min(x, y), y1 = y - Math.Min(x, y);
+            int x1 = 0, y1 = 0;
             while (IsValidCoordinate(x1, y1))
             {
                 if (Celles[x1, y1].Pieces.Count > 0 && Celles[x1, y1].Pieces.Peek().Color == cell.Pieces.Peek().Color && cell.Pieces.Peek().Color != externalPiece.Color)
@@ -203,7 +204,8 @@ namespace Gobblet_Game
             //check 2 diagonall
             count = 0;
             int val = Math.Min(x, 3 - y);
-            x1 = x - val; y1 = y + val;
+            // x1 = x - val; y1 = y + val;
+            x1 = 0;y1 = 3;
             while (IsValidCoordinate(x1, y1))
             {
                 if (Celles[x1, y1].Pieces.Count > 0 && Celles[x1, y1].Pieces.Peek().Color == cell.Pieces.Peek().Color && cell.Pieces.Peek().Color != externalPiece.Color)
@@ -220,5 +222,12 @@ namespace Gobblet_Game
                 return false;
             return true;
         }
+        public static bool GoodCell(Cell cell)
+        {
+            if((cell.Column == 1 && cell.Row == 1) || (cell.Column == 2 && cell.Row == 2) ||
+                (cell.Column == 2 && cell.Row == 1) || (cell.Column == 1 && cell.Row == 2)) 
+                return true;
+            return false;
+        } 
     }
 }
