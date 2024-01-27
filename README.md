@@ -1,11 +1,11 @@
 # Gobblet-Game
-Game-Playing Supported Algorithms
+# Game-Playing Supported Algorithms
 ➢ Min-Max with Alpha-Beta algorithm to get the best move of the current player.
 ➢ The get next moves algorithm is used to get all the valid moves available for each player.
 ➢ Valid Moves Algorithms to make sure that players apply the right rules.
 ➢ Clone Algorithms to make a copy of the main objects.
 ➢ Helper Algorithms are used to serve the other algorithms.
-Heuristics description and their benefit
+# Heuristics description and their benefit
 1- We calculate the heuristic for each move and sum them together until we reach the 
 maximum depth.
 2- Each player searches for all his possible moves and then chooses the best move to make 
@@ -34,7 +34,7 @@ because it will increase the chances of winning as the player has more
 pieces.
 7- Heuristic is signed according to the players, If the player is white it will be negative, 
 otherwise it will be positive.
-Supported Features 
+# Supported Features 
 ➢ The game has three states:
 o Player VS Player
 o Player VS Computer
@@ -44,7 +44,7 @@ o Easy
 o Medium
 o Hard
 ➢ You can restart the game or end the game.
-Maximum Difficulty Level Supported
+# Maximum Difficulty Level Supported
 ➢ Depth at 5
-The level at which the AI will always win.
+# The level at which the AI will always win.
 ➢ Depth at 6 or more
