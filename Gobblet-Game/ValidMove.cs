@@ -31,7 +31,7 @@ namespace Gobblet_Game
                     if (celles[j, cell.Column].Pieces.Count != 0 && celles[j, cell.Column].Pieces.Peek().Color == color) num++;
                     //else tempj = j;
                 }
-                if (num >= 3 /*&& i == cell.Column && cell.Row == tempj*/) return true;
+            if (num >= 3 /*&& i == cell.Column && cell.Row == tempj*/) return true;
           //  }
             num = 0;
            // int tempI = -1;
