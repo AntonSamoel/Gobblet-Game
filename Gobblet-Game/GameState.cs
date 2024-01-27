@@ -14,10 +14,7 @@ namespace Gobblet_Game
         public Board currentBoard;
         public Player player1;
         public Player player2;
-        //public static Move lstMove;
-        //public int alpha;
-        //public int beta;
-      //  public int totalHeuristicScore; //heuristic
+
         public Move bestMove;
 
 
@@ -44,20 +41,6 @@ namespace Gobblet_Game
             
             if (depth == 0)
             {
-                if (player1.IsMyTurn && ValidMove.isAboutToWin("white", currentBoard.Celles, lstMove) && !ValidMove.isAboutToWin("black", currentBoard.Celles, lstMove))
-                {
-                    return 1000000000*lstMove.p.Size;
-                }
-                else if (player1.IsMyTurn && ValidMove.IsWinning("black", currentBoard.Celles) == "black")
-                {
-                    if (ValidMove.IsWinning("white", currentBoard.Celles) == "white") return -1000000000;               // special case sent to el mo3ed
-                    return (depth + 1) * 10;
-                }
-                else if (player2.IsMyTurn && ValidMove.IsWinning("white", currentBoard.Celles) == "white")
-                {
-                    if (ValidMove.IsWinning("black", currentBoard.Celles) == "black") return 1000000000;                // special case sent to el mo3ed
-                    return (5 - depth) * -10;
-                }
 
                 return 0;
             }
@@ -179,9 +162,9 @@ namespace Gobblet_Game
                 bouns += 1;
             if (player1.IsMyTurn && ValidMove.isAboutToWin("white", currentBoard.Celles, move.to) && !ValidMove.isAboutToWin("black", currentBoard.Celles, move.to))
             {
-                if(move.from is not null && ValidMove.isAboutToWin("white", currentBoard.Celles, move.from))
+                if (move.from is not null && ValidMove.isAboutToWin("white", currentBoard.Celles, move.from))
                     return -move.p.Size * depth - bouns;
-                return   move.p.Size * depth + bouns;
+                return move.p.Size * depth + bouns;
             }
             else if (player2.IsMyTurn && ValidMove.isAboutToWin("black", currentBoard.Celles, move.to) && !ValidMove.isAboutToWin("white", currentBoard.Celles, move.to))
             {
@@ -194,15 +177,16 @@ namespace Gobblet_Game
                 // if (ValidMove.IsWinning("white", currentBoard.Celles) == "white") score = long.MinValue + 100;               // special case sent to el mo3ed
                 //else 
                 ok = false;
-                return depth*7 + bouns;
+                return depth * 7 + bouns;
             }
-            else if ( player2.IsMyTurn && ValidMove.IsWinning("white", currentBoard.Celles) == "white")
+            else if (player2.IsMyTurn && ValidMove.IsWinning("white", currentBoard.Celles) == "white")
             {
                 // if (ValidMove.IsWinning("black", currentBoard.Celles) == "black") score = long.MaxValue - 100;                // special case sent to el mo3ed
                 // else
                 ok = false;
-                return - depth * 7 - bouns;
+                return -depth * 7 - bouns;
             }
+            else if (GameState.isDraw(player1, player2)) return 1;
             return player1.IsMyTurn? bouns : -bouns;
         }
 
@@ -303,9 +287,17 @@ namespace Gobblet_Game
             }
             return nextMoves;
         }
+
+
+
+
         //method to check the draw condition
-      /*  public bool isDraw()
+        public static bool isDraw(Player player1, Player player2)
         {
+            if (player1.previousMoves.first == null || player1.previousMoves.second == null || player1.previousMoves.third == null) return false;
+            if (player2.previousMoves.first == null || player2.previousMoves.second == null || player2.previousMoves.third == null) return false;
+
+
             //check that white make the sequence of moves that lead to draw
             bool whiteCondition = (player1.previousMoves.first.from == player1.previousMoves.third.from);
             whiteCondition = whiteCondition && (player1.previousMoves.first.to == player1.previousMoves.third.to);
@@ -320,7 +312,8 @@ namespace Gobblet_Game
 
             //return true if both player make the sequence of draw
             return blackCondition && whiteCondition;
-        }*/
+        }
+
     }
     public class Move
     {
@@ -343,9 +336,9 @@ namespace Gobblet_Game
     }
     public class PreviousMoves
     {
-      /*  public Move? first = GameState.dummy;
-        public Move? second = GameState.dummy;
-        public Move? third = GameState.dummy;
+        public Move? first;
+        public Move? second;
+        public Move? third;
 
 
         public void addMove(Piece p, Cell from, Cell to)
@@ -353,7 +346,8 @@ namespace Gobblet_Game
             first = second;
             second = third;
             third = new Move(p, from, to);
-        }*/
+        }
     }
 }
+
 
