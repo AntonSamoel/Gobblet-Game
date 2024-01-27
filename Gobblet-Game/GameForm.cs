@@ -353,8 +353,16 @@ namespace Gobblet_Game
                         if(WhoWinned() == 1)
                             return;
 
-                       // player1.previousMoves.addMove(movedPiece,PreviosCell,currentCell);
+                        if(GameState.isDraw(player1,player2))
+                        {
+                            winningText.Text = $"Draw";
+                            winningText.Visible = true;
+                            isWinState = true;
+                            return;
+                        }
 
+                        if(player1.IsMyTurn) player1.previousMoves.addMove(movedPiece,PreviosCell,currentCell);
+                        else player2.previousMoves.addMove(movedPiece, PreviosCell, currentCell);
                         previousPictureBox.BackColor = previousColor;
                         previousPictureBox = null;
 
@@ -490,6 +498,10 @@ namespace Gobblet_Game
                 ImageBasedOnSize(pictureBoxes[xfrom, yfrom], Celles[xfrom, yfrom].Pieces.Count > 0 ? Celles[xfrom, yfrom].Pieces.Peek() : null);
                 ImageBasedOnSize(pictureBoxes[xto, yto], Celles[xto, yto].Pieces.Peek());
             }
+            if(who)
+                player1.previousMoves.addMove(m.p, cellFrom, cellTo);
+            else
+                player2.previousMoves.addMove(m.p, cellFrom, cellTo);
             return WhoWinned();
         }
         //with alpha beta
@@ -606,7 +618,7 @@ namespace Gobblet_Game
             {
                 currentPictureBox.Image = previousPictureBox.Image;
                 currentCell.Pieces.Push(pieces.Pop());
-               // player1.previousMoves.addMove(piece, null, currentCell);
+                player1.previousMoves.addMove(piece, null, currentCell);
                 if (pieces.Count > 0)
                     piece = pieces!.Peek();
                 else

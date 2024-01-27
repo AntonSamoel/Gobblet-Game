@@ -186,7 +186,7 @@ namespace Gobblet_Game
                 ok = false;
                 return -depth * 7 - bouns;
             }
-            else if (GameState.isDraw(player1, player2)) return 1;
+           
             return player1.IsMyTurn? bouns : -bouns;
         }
 
