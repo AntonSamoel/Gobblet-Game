@@ -13,10 +13,8 @@ namespace Gobblet_Game
         public Board currentBoard;
         public Player player1;
         public Player player2;
-        //public static Move lstMove;
-     //   public int alpha;
-       // public int beta;
-      //  public int totalHeuristicScore; //heuristic
+        public static Move lstMove;
+
         public Move bestMove;
 
 
@@ -97,20 +95,21 @@ namespace Gobblet_Game
             if(depth ==0)   // dummy
             if (depth == 0)
             {
-                if (player1.IsMyTurn && ValidMove.isAboutToWin("white", currentBoard.Celles, lstMove) && !ValidMove.isAboutToWin("black", currentBoard.Celles, lstMove))
-                {
-                    return 1000000000;
-                }
-                else if (player1.IsMyTurn && ValidMove.IsWinning("black", currentBoard.Celles) == "black")
-                {
-                    if (ValidMove.IsWinning("white", currentBoard.Celles) == "white") return -1000000000;               // special case sent to el mo3ed
-                    return (depth + 1) * 10;
-                }
-                else if (player2.IsMyTurn && ValidMove.IsWinning("white", currentBoard.Celles) == "white")
-                {
-                    if (ValidMove.IsWinning("black", currentBoard.Celles) == "black") return 1000000000;                // special case sent to el mo3ed
-                    return (5 - depth) * -10;
-                }
+                    if (player1.IsMyTurn && ValidMove.isAboutToWin("white", currentBoard.Celles, lstMove) && !ValidMove.isAboutToWin("black", currentBoard.Celles, lstMove))
+                    {
+                        return 1000000000;
+                    }
+                    else if (player1.IsMyTurn && ValidMove.IsWinning("black", currentBoard.Celles) == "black")
+                    {
+                        if (ValidMove.IsWinning("white", currentBoard.Celles) == "white") return -1000000000;               // special case sent to el mo3ed
+                        return (depth + 1) * 10;
+                    }
+                    else if (player2.IsMyTurn && ValidMove.IsWinning("white", currentBoard.Celles) == "white")
+                    {
+                        if (ValidMove.IsWinning("black", currentBoard.Celles) == "black") return 1000000000;                // special case sent to el mo3ed
+                        return (5 - depth) * -10;
+                    }
+
 
                 return 0;
             }
@@ -218,8 +217,11 @@ namespace Gobblet_Game
             }
             return nextMoves;
         }
+        
+        
         //method to check the draw condition
-      /*  public bool isDraw()
+      
+        public bool isDraw()
         {
             //check that white make the sequence of moves that lead to draw
             bool whiteCondition = (player1.previousMoves.first.from == player1.previousMoves.third.from);
@@ -235,7 +237,7 @@ namespace Gobblet_Game
 
             //return true if both player make the sequence of draw
             return blackCondition && whiteCondition;
-        }*/
+        }
     }
     public class Move
     {
@@ -258,9 +260,9 @@ namespace Gobblet_Game
     }
     public class PreviousMoves
     {
-      /*  public Move? first = GameState.dummy;
-        public Move? second = GameState.dummy;
-        public Move? third = GameState.dummy;
+        public Move? first;
+        public Move? second;
+        public Move? third;
 
 
         public void addMove(Piece p, Cell from, Cell to)
@@ -268,7 +270,7 @@ namespace Gobblet_Game
             first = second;
             second = third;
             third = new Move(p, from, to);
-        }*/
+        }
     }
 }
 
