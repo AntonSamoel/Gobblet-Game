@@ -175,6 +175,8 @@ namespace Gobblet_Game
             int bouns = 0;
             if (ValidMove.GoodCell(move.to))
                 bouns = 1;
+            if (move.from is null)
+                bouns += 1;
             if (player1.IsMyTurn && ValidMove.isAboutToWin("white", currentBoard.Celles, move.to) && !ValidMove.isAboutToWin("black", currentBoard.Celles, move.to))
             {
                 if(move.from is not null && ValidMove.isAboutToWin("white", currentBoard.Celles, move.from))

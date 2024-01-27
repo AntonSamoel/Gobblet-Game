@@ -463,10 +463,10 @@ namespace Gobblet_Game
 
             if (ind != -1)
             {
-                PictureBox box = ChoosePicutre(ind);
+                PictureBox box = ChoosePicutre(who,ind);
 
                 Piece piece = who? player1.Pieces[ind].Pop() : player2.Pieces[ind].Pop();
-                ImageBasedOnSize(box, who? (player1.Pieces[ind].Count > 0 ? player2.Pieces[ind].Peek() : null) : (player2.Pieces[ind].Count > 0 ? player2.Pieces[ind].Peek() : null));
+                ImageBasedOnSize(box, who? (player1.Pieces[ind].Count > 0 ? player1.Pieces[ind].Peek() : null) : (player2.Pieces[ind].Count > 0 ? player2.Pieces[ind].Peek() : null));
 
                 //gameState.player2.Pieces[ind].Pop();
 
@@ -534,7 +534,7 @@ namespace Gobblet_Game
                 score = GameState.HeustricComp(gameState.player1, gameState.player2, gameState.currentBoard, moves[i], ref ok,depth + 1);
 
                 if(ok)
-                    score = gameState.getBestMoveAB(alpha,beta, false,depth,score /*moves[i]*/);
+                    score = gameState.getBestMoveAB(alpha, beta, who, depth, score /*moves[i]*/);
 
                 if (who)
                 {
@@ -576,14 +576,14 @@ namespace Gobblet_Game
 
             return bestMove;
         }
-        public PictureBox ChoosePicutre(int x)
+        public PictureBox ChoosePicutre(bool who,int x)
         {
             if (x == 0)
-                return stack4;
+                return who?stack1:stack4;
             else if (x == 1)
-                return stack5;
+                return who ? stack2:stack5;
             else
-                return stack6;
+                return who ? stack3:stack6;
         }
         private void SwapTurns()
         {
@@ -680,11 +680,23 @@ namespace Gobblet_Game
             }
         }
 
-        private void newGameBtn_Click(object sender, EventArgs e)
+        private async void newGameBtn_Click(object sender, EventArgs e)
         {
             string p1 = p1Name.Text, p2 = p2Name.Text;
             this.Close();
-            GameForm gameForm = new (p1, p2,player1.IsComputer,player2.IsComputer,deep);
+            GameForm gameForm;
+            if (player1.IsComputer && player2.IsComputer)
+            {
+                gameForm = new(p1, p2, player1.IsComputer, player2.IsComputer, deep, deep2);
+                gameForm.Show();
+                await Task.Delay(3000);
+                gameForm.CvsC();
+                return;
+            }
+            else if (player2.IsComputer)
+                gameForm = new(p1, p2, player1.IsComputer, player2.IsComputer, deep);
+            else 
+                gameForm = new(p1, p2, player1.IsComputer, player2.IsComputer);
             gameForm.Show();
         }
     }
