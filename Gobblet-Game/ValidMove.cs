@@ -11,46 +11,39 @@ namespace Gobblet_Game
         public static bool isAboutToWin(string color, Cell[,] celles, Cell cell)
         {
             int num;
-          //  for(int i = 0; i < 4; i++)
-          //  {
-                num = 0;
-            //    int tempj = -1;
-                for(int j = 0; j < 4; j++)
-                {
-                    if (celles[cell.Row, j].Pieces.Count != 0 && celles[cell.Row, j].Pieces.Peek().Color == color) num++;
-                    //else tempj = j;
-                }
-                if (num >= 3 /*&& tempj == cell.Column && cell.Row == i*/) return true;
-          //  }
-          //  for (int i = 0; i < 4; i++)
-          //  {
-                num = 0;
-            //    tempj = -1;
-                for (int j = 0; j < 4; j++)
-                {
-                    if (celles[j, cell.Column].Pieces.Count != 0 && celles[j, cell.Column].Pieces.Peek().Color == color) num++;
-                    //else tempj = j;
-                }
-            if (num >= 3 /*&& i == cell.Column && cell.Row == tempj*/) return true;
-          //  }
+
             num = 0;
-           // int tempI = -1;
+            for(int j = 0; j < 4; j++)
+            {
+                if (celles[cell.Row, j].Pieces.Count != 0 && celles[cell.Row, j].Pieces.Peek().Color == color) num++;
+            }
+
+            if ((num) >= 3 ) return true;
+
+            num = 0;
+
+            for (int j = 0; j < 4; j++)
+            {
+                if (celles[j, cell.Column].Pieces.Count != 0 && celles[j, cell.Column].Pieces.Peek().Color == color) num++;
+
+            }
+            if ((num) >= 3 ) return true;
+
+            num = 0;
+
             for (int i = 0; i < 4; i++)
             {
-
                 if (celles[i, i].Pieces.Count != 0 && celles[i, i].Pieces.Peek().Color == color && cell.Column == cell.Row) num++;
-               // else tempI = i;
             }
-            if (num >= 3 /*&& tempI == cell.Column && cell.Row == tempI*/) return true;
+            if ((num)>= 3) return true;
             num = 0;
-           // tempI = -1;
+
             for (int i = 0; i < 4; i++)
             {
 
                 if (celles[i, (3 - i)].Pieces.Count != 0 && celles[i, (3 - i)].Pieces.Peek().Color == color && (cell.Row+cell.Column == 3)) num++;
-                //else tempI = i;
             }
-            if (num >= 3 /*&& (3 - tempI) == cell.Column && cell.Row == tempI*/) return true;
+            if ((num) >= 3) return true;
             return false;
         }
         public static string IsWinning(string color,Cell[,] cells)
