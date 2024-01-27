@@ -36,17 +36,20 @@ namespace Gobblet_Game
         //AI
         bool Computer1;
         bool Computer2;
+        int deep,deep2;
 
         public GameState gameState;
         private Board board;
         
 
-        public GameForm(string player1Name, string player2Name,bool computer1, bool computer2)
+        public GameForm(string player1Name, string player2Name,bool computer1, bool computer2,int depth = 0,int depth2 = 0)
         {
             Player1Name = player1Name;
             Player2Name = player2Name;
             Computer1 = computer1;
             Computer2 = computer2;
+            this.deep = depth;
+            deep2 = depth2;
             InitializeComponent();
             IntalizeGame();
         }
@@ -210,8 +213,24 @@ namespace Gobblet_Game
             }
             winningText.Visible = false;
             isWinState = false;
+         //   if (Computer1 && Computer2)
+             //   CvsC();
         }
-
+        public async void CvsC()
+        {
+            while (true)
+            {
+                int ok = ComputerPlay(deep, true);
+                if (ok == 1)
+                    break;
+                await Task.Delay(2000);
+                ok = ComputerPlay(deep2, false);
+                if(ok == 1)
+                    break;
+                await Task.Delay(2000);
+            }
+            
+        }
         private void endGame_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -308,7 +327,7 @@ namespace Gobblet_Game
                     previousPictureBox = null;
                     if (ok == -1)
                     {
-                        if((player1.IsMyTurn && player1.IsComputer) || (player2.IsMyTurn && player2.IsComputer)) ComputerPlay();
+                        if((player1.IsMyTurn && player1.IsComputer) || (player2.IsMyTurn && player2.IsComputer)) ComputerPlay(deep,false);
                     }
                     return;
                 }
@@ -339,7 +358,7 @@ namespace Gobblet_Game
                         previousPictureBox.BackColor = previousColor;
                         previousPictureBox = null;
 
-                        if ((player1.IsMyTurn && player1.IsComputer) || (player2.IsMyTurn && player2.IsComputer)) ComputerPlay();
+                        if ((player1.IsMyTurn && player1.IsComputer) || (player2.IsMyTurn && player2.IsComputer)) ComputerPlay(deep,false);
 
                     }
 
@@ -366,48 +385,13 @@ namespace Gobblet_Game
                 }
             }
         }
-        private void ComputerPlay()
+        private int ComputerPlay(int depth,bool who)
         {
-            Move m = PlayAI();
+            Move m = PlayAI(depth,who);
 
-            int ind = WhichStack(player2, m.p);
-            Cell? cellFrom = m.from, cellTo = m.to;
-
-           
-            int xto = cellTo.Row, yto = cellTo.Column;
-            
-            if (ind != -1)
-            {
-                PictureBox box = ChoosePicutre(ind);
-                
-                Piece piece = player2.Pieces[ind].Pop();
-                ImageBasedOnSize(box, player2.Pieces[ind].Count > 0 ? player2.Pieces[ind].Peek() : null);
-                
-                //gameState.player2.Pieces[ind].Pop();
-
-                //cellTo.Pieces.Push(piece);
-                //update To 
-                
-                Celles[xto, yto].Pieces.Push(piece);
-               // gameState.currentBoard.Celles[m.to.Row, m.to.Column].Pieces.Push(piece);
-                
-                pictureBoxes[cellTo.Row, cellTo.Column].Image = piece.Image;
-            }
-            else
-            {
-                //cellTo.Pieces.Push(cellFrom.Pieces.Pop());
-                int xfrom = cellFrom.Row, yfrom = cellFrom.Column;
-                Celles[xto, yto].Pieces.Push(Celles[xfrom, yfrom].Pieces.Pop());
-                //gameState.currentBoard.Celles[m.to.Row, m.to.Column].Pieces.Push(piece);
-                //gameState.currentBoard.Celles[m.from.Row, m.from.Column].Pieces.Pop();
-                
-
-                ImageBasedOnSize(pictureBoxes[xfrom, yfrom], Celles[xfrom, yfrom].Pieces.Count > 0? Celles[xfrom, yfrom].Pieces.Peek(): null);
-                ImageBasedOnSize(pictureBoxes[xto, yto], Celles[xto, yto].Pieces.Peek());
-            }
-            WhoWinned();
+            return HandleComputer(m, who);
         }
-        private Move PlayAI()
+        /*private Move PlayAI()
         {
             board = new(Celles);
             // are the board, player1 and 2 changed before being given as copies here?
@@ -467,8 +451,131 @@ namespace Gobblet_Game
             }
 
             return bestMove;
-        }
+        }*/
 
+        private int HandleComputer(Move m,bool who)
+        {
+            int ind = WhichStack(who?player1:player2, m.p);
+            Cell? cellFrom = m.from, cellTo = m.to;
+
+
+            int xto = cellTo.Row, yto = cellTo.Column;
+
+            if (ind != -1)
+            {
+                PictureBox box = ChoosePicutre(ind);
+
+                Piece piece = who? player1.Pieces[ind].Pop() : player2.Pieces[ind].Pop();
+                ImageBasedOnSize(box, who? (player1.Pieces[ind].Count > 0 ? player2.Pieces[ind].Peek() : null) : (player2.Pieces[ind].Count > 0 ? player2.Pieces[ind].Peek() : null));
+
+                //gameState.player2.Pieces[ind].Pop();
+
+                //cellTo.Pieces.Push(piece);
+                //update To 
+
+                Celles[xto, yto].Pieces.Push(piece);
+                // gameState.currentBoard.Celles[m.to.Row, m.to.Column].Pieces.Push(piece);
+
+                pictureBoxes[cellTo.Row, cellTo.Column].Image = piece.Image;
+            }
+            else
+            {
+                //cellTo.Pieces.Push(cellFrom.Pieces.Pop());
+                int xfrom = cellFrom.Row, yfrom = cellFrom.Column;
+                Celles[xto, yto].Pieces.Push(Celles[xfrom, yfrom].Pieces.Pop());
+                //gameState.currentBoard.Celles[m.to.Row, m.to.Column].Pieces.Push(piece);
+                //gameState.currentBoard.Celles[m.from.Row, m.from.Column].Pieces.Pop();
+
+
+                ImageBasedOnSize(pictureBoxes[xfrom, yfrom], Celles[xfrom, yfrom].Pieces.Count > 0 ? Celles[xfrom, yfrom].Pieces.Peek() : null);
+                ImageBasedOnSize(pictureBoxes[xto, yto], Celles[xto, yto].Pieces.Peek());
+            }
+            return WhoWinned();
+        }
+        //with alpha beta
+        // ==========================================================
+        private Move PlayAI(int depth,bool who)
+        {
+            board = new(Celles);
+            // are the board, player1 and 2 changed before being given as copies here?
+            gameState = new GameState(HandleAI.copyBoard(board), HandleAI.copyPlayer(player1), HandleAI.copyPlayer(player2), true);
+            List<Move> moves;
+            moves = GameState.getNextMoves(who? gameState.player1 : gameState.player2, gameState.currentBoard);    // at the beginning I'll get all the moves player2 will can play as its the computer's turn.
+            Move bestMove = null;
+            long alpha = long.MinValue, beta = long.MaxValue;
+
+            for (int i = 0; i < moves.Count; i++)
+            {
+                int x, y;
+                Piece tempPeice = moves[i].p;
+                if (moves[i].from is not null)
+                {
+                    x = moves[i].from!.Row;
+                    y = moves[i].from!.Column;
+                    if (gameState.currentBoard.Celles[x, y].Pieces.Count != 0) gameState.currentBoard.Celles[x, y].Pieces.Pop();
+                }
+                else
+                {
+                    if (gameState.player1.IsMyTurn)
+                        gameState.player1.Pieces[moves[i].stack].Pop();
+                    else
+                        gameState.player2.Pieces[moves[i].stack].Pop();
+                }
+                x = moves[i].to!.Row;
+                y = moves[i].to!.Column;
+                gameState.currentBoard.Celles[x, y].Pieces.Push(tempPeice);
+
+                gameState.player1.IsMyTurn = !gameState.player1.IsMyTurn;
+                gameState.player2.IsMyTurn = !gameState.player2.IsMyTurn;
+                if (bestMove == null) bestMove = moves[i];
+                bool ok = true;
+                long score;
+                
+                score = GameState.HeustricComp(gameState.player1, gameState.player2, gameState.currentBoard, moves[i], ref ok,depth + 1);
+
+                if(ok)
+                    score = gameState.getBestMoveAB(alpha,beta, false,depth,score /*moves[i]*/);
+
+                if (who)
+                {
+                    if (score < beta)
+                    {
+                        beta = score;
+                        bestMove = moves[i];
+                    }
+                }
+                else
+                {
+                    if (score > alpha)
+                    {
+                        alpha = score;
+                        bestMove = moves[i];
+                    }
+                }
+ 
+
+                
+                gameState.player1.IsMyTurn = !gameState.player1.IsMyTurn;               // should be like the one before the recursion
+                gameState.player2.IsMyTurn = !gameState.player2.IsMyTurn;               // same
+                gameState.currentBoard.Celles[x, y].Pieces.Pop();
+                if (moves[i].from is not null)
+                {
+                    x = moves[i].from!.Row;
+                    y = moves[i].from!.Column;
+                    gameState.currentBoard.Celles[x, y].Pieces.Push(tempPeice!);
+                }
+                else
+                {
+                    if (gameState.player1.IsMyTurn)
+                        gameState.player1.Pieces[moves[i].stack].Push(tempPeice);
+                    else
+                        gameState.player2.Pieces[moves[i].stack].Push(tempPeice);
+                }
+                
+            }
+
+            return bestMove;
+        }
         public PictureBox ChoosePicutre(int x)
         {
             if (x == 0)
@@ -577,7 +684,7 @@ namespace Gobblet_Game
         {
             string p1 = p1Name.Text, p2 = p2Name.Text;
             this.Close();
-            GameForm gameForm = new (p1, p2,player1.IsComputer,player2.IsComputer);
+            GameForm gameForm = new (p1, p2,player1.IsComputer,player2.IsComputer,deep);
             gameForm.Show();
         }
     }

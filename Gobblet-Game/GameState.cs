@@ -5,6 +5,7 @@ using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace Gobblet_Game
 {
@@ -13,12 +14,10 @@ namespace Gobblet_Game
         public Board currentBoard;
         public Player player1;
         public Player player2;
-        public static Move lstMove;
 
         public Move bestMove;
 
 
-        //Move lastMove = new();
         //TODO
         //constructors 
         //for gui initial gamestate
@@ -28,42 +27,7 @@ namespace Gobblet_Game
         //Game constructor to game state with current board state 
         public GameState(Board b, Player player1, Player player2, bool reverse = false)
         {
-            //player1.IsMyTurn = false;
-            //player2.IsMyTurn = true;
-            /*if (reverse)
-            {
-                player2.IsMyTurn = true;
-                player1.IsMyTurn = false;
-                // player1.IsMyTurn = !player1.IsMyTurn;
-                // player2.IsMyTurn = !player2.IsMyTurn;
-            }*/
-            /*
-            if (player1.IsMyTurn)
-            {
-                player1.IsMyTurn = false;
-                player2.IsMyTurn = true;
-                //if(player1.previousMoves.third != dummy) //not first move for player in the game
-                 //   lastMove = player1.previousMoves.third;
-            }
-            else
-            {
-                player1.IsMyTurn = true;
-                player2.IsMyTurn = false;
-                //if (player2.previousMoves.third != dummy)
-                 //   lastMove = player2.previousMoves.third;
-            }*/
-            /*if (lastMove != dummy)
-            {
-                if (lastMove is not null && lastMove.from is not null && lastMove.to is not null)
-                {
-                    int i = lastMove.from.Row;
-                    int j = lastMove.from.Column;
-                    Piece currentPiece = b.Celles[i, j].Pieces.Pop();
-                    i = lastMove.to.Row;
-                    j = lastMove.to.Column;
-                    b.Celles[i, j].Pieces.Push(currentPiece);
-                }
-            }*/
+            
             this.currentBoard = b;
             this.player1 = player1;
             this.player2 = player2;
@@ -71,55 +35,22 @@ namespace Gobblet_Game
         
 
         //main work
+        /*
         public long getBestMove(int depth, long id, Move lstMove)
         {
-            /*if (id == 0 && player1.IsMyTurn
-                && ValidMove.isAboutToWin("white", currentBoard.Celles, lstMove)
-                && !ValidMove.isAboutToWin("black", currentBoard.Celles, lstMove))
-            {
-
-                return 1000000000;
-            }
-            else if (player1.IsMyTurn && ValidMove.IsWinning("black", currentBoard.Celles) == "black")
-            {
-                if (ValidMove.IsWinning("white", currentBoard.Celles) == "white") return -1000000000;               // special case sent to el mo3ed
-                return (depth + 1) * 10;
-            }
-            else if (player2.IsMyTurn && ValidMove.IsWinning("white", currentBoard.Celles) == "white")
-            {
-                if (ValidMove.IsWinning("black", currentBoard.Celles) == "black") return 1000000000;                // special case sent to el mo3ed
-                return (5 - depth) * -10;
-            }
-            // else if (gameState.isDraw()) return 1;
-            else if(depth==0) reutrn 0;*/
-            if(depth ==0)   // dummy
+            
             if (depth == 0)
             {
-                    if (player1.IsMyTurn && ValidMove.isAboutToWin("white", currentBoard.Celles, lstMove) && !ValidMove.isAboutToWin("black", currentBoard.Celles, lstMove))
-                    {
-                        return 1000000000;
-                    }
-                    else if (player1.IsMyTurn && ValidMove.IsWinning("black", currentBoard.Celles) == "black")
-                    {
-                        if (ValidMove.IsWinning("white", currentBoard.Celles) == "white") return -1000000000;               // special case sent to el mo3ed
-                        return (depth + 1) * 10;
-                    }
-                    else if (player2.IsMyTurn && ValidMove.IsWinning("white", currentBoard.Celles) == "white")
-                    {
-                        if (ValidMove.IsWinning("black", currentBoard.Celles) == "black") return 1000000000;                // special case sent to el mo3ed
-                        return (5 - depth) * -10;
-                    }
-                    else if (isDraw()) return 1;
-
 
                 return 0;
             }
+
             //get all possible moves in this state
             List<Move> moves;
             moves = getNextMoves((player1.IsMyTurn ? player1 : player2), currentBoard);
 
             long maxHeuristic = 0;                          //how many wins under this state
-            //Move maxMove = null;                          //hold the best move that achieve the max heuristic score
+
             for (int i = 0; i < moves.Count; i++)
             {
                 int x, y;
@@ -166,8 +97,144 @@ namespace Gobblet_Game
             }
             return maxHeuristic;
         }
+        */
+        public long getBestMoveAB(long alpha, long beta,bool isMax, int depth,long score/*, Move lstMove*/)
+        {
 
+            if (depth == 0)
+            {
+                /*if (isMax) return alpha;
+                return beta;*/
+                return score;
+            }
+            //get all possible moves in this state
+            List<Move> moves;
+            moves = getNextMoves((player1.IsMyTurn ? player1 : player2), currentBoard);
+            
+            //if (depth == 1)
+                //isMax = !isMax;
 
+            for (int i = 0; i < moves.Count; i++)
+            {
+                Update(moves[i]);
+                // lstMove = moves[i];
+
+                // long score = long.MinValue;
+                bool ok = true;
+                long last = score + HeustricComp(player1, player2, currentBoard, moves[i], ref ok, depth);
+
+                
+
+                if(ok)
+                    last = getBestMoveAB(alpha, beta, !isMax, depth - 1,last /*, moves[i]*/);
+
+                RollBack(moves[i]);
+
+                //alpha beta implementation
+
+                    if (isMax)
+                    {
+                        //long temp = alpha;
+                        alpha = long.Max(alpha, last);
+                        if (alpha >= beta) return beta;
+                    }
+                    else
+                    {
+                       // long temp = beta;
+                        beta = long.Min(beta, last);
+                        if (alpha >= beta) return alpha;
+                    }
+               
+                //=========================================
+
+            }
+
+            if (isMax) return alpha;
+             return beta;
+            //return score;
+        }
+        public static long HeustricComp(Player player1,Player player2,Board currentBoard, Move move,ref bool ok,long depth)
+        {
+            int bouns = 0;
+            if (ValidMove.GoodCell(move.to))
+                bouns = 1;
+            if (player1.IsMyTurn && ValidMove.isAboutToWin("white", currentBoard.Celles, move.to) && !ValidMove.isAboutToWin("black", currentBoard.Celles, move.to))
+            {
+                if (move.from is not null && ValidMove.isAboutToWin("white", currentBoard.Celles, move.from))
+                    return -move.p.Size * depth - bouns;
+                return move.p.Size * depth + bouns;
+            }
+            else if (player2.IsMyTurn && ValidMove.isAboutToWin("black", currentBoard.Celles, move.to) && !ValidMove.isAboutToWin("white", currentBoard.Celles, move.to))
+            {
+                if (move.from is not null && ValidMove.isAboutToWin("black", currentBoard.Celles, move.from))
+                    return +move.p.Size * depth + bouns;
+                return -move.p.Size * depth - bouns;
+            }
+            else if (player1.IsMyTurn && ValidMove.IsWinning("black", currentBoard.Celles) == "black")
+            {
+                // if (ValidMove.IsWinning("white", currentBoard.Celles) == "white") score = long.MinValue + 100;               // special case sent to el mo3ed
+                //else 
+                ok = false;
+                return depth * 7 + bouns;
+            }
+            else if (player2.IsMyTurn && ValidMove.IsWinning("white", currentBoard.Celles) == "white")
+            {
+                // if (ValidMove.IsWinning("black", currentBoard.Celles) == "black") score = long.MaxValue - 100;                // special case sent to el mo3ed
+                // else
+                ok = false;
+                return -depth * 7 - bouns;
+            }
+            else if (GameState.isDraw(player1, player2)) return 1;
+            return player1.IsMyTurn? bouns : -bouns;
+        }
+
+        private void Update(Move move)
+        {
+            int x, y;
+            Piece tempPeice = move.p;
+            if (move.from is not null)
+            {
+                x = move.from!.Row;
+                y = move.from!.Column;
+                if (currentBoard.Celles[x, y].Pieces.Count != 0) currentBoard.Celles[x, y].Pieces.Pop();
+            }
+            else
+            {
+                if (player1.IsMyTurn)
+                    player1.Pieces[move.stack].Pop();
+                else
+                    player2.Pieces[move.stack].Pop();
+            }
+            x = move.to!.Row;
+            y = move.to!.Column;
+            currentBoard.Celles[x, y].Pieces.Push(tempPeice);
+
+            player1.IsMyTurn = !player1.IsMyTurn;
+            player2.IsMyTurn = !player2.IsMyTurn;
+        }
+        private void RollBack(Move move)
+        {
+            Piece tempPeice = move.p;
+            int x, y;
+            x = move.to!.Row;
+            y = move.to!.Column;
+            player1.IsMyTurn = !player1.IsMyTurn;
+            player2.IsMyTurn = !player2.IsMyTurn;
+            currentBoard.Celles[x, y].Pieces.Pop();
+            if (move.from is not null)
+            {
+                x = move.from!.Row;
+                y = move.from!.Column;
+                currentBoard.Celles[x, y].Pieces.Push(tempPeice!);
+            }
+            else
+            {
+                if (player1.IsMyTurn)
+                    player1.Pieces[move.stack].Push(tempPeice);
+                else
+                    player2.Pieces[move.stack].Push(tempPeice);
+            }
+        }
         //must return list of valid moves 
         //must return list of valid moves 
         public static List<Move> getNextMoves(Player player, Board currentBoard)
@@ -218,11 +285,11 @@ namespace Gobblet_Game
             }
             return nextMoves;
         }
-        
-        
+
+
         //method to check the draw condition
-      
-        public bool isDraw()
+
+        public static bool isDraw(Player player1, Player player2)
         {
             if (player1.previousMoves.first == null || player1.previousMoves.second == null || player1.previousMoves.third == null) return false;
             if (player2.previousMoves.first == null || player2.previousMoves.second == null || player2.previousMoves.third == null) return false;

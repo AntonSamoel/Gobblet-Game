@@ -33,52 +33,65 @@ namespace Gobblet_Game
 
 		}
 
-		private void startGamebtn_Click(object sender, EventArgs e)
+		private async void startGamebtn_Click(object sender, EventArgs e)
 		{
 			if (pvpRb.Checked)
 			{
-				GameForm gameForm = new (player1Nametb.Text,player2Nametb.Text,false,false);
+				GameForm gameForm = new (player1Nametb.Text,player2Nametb.Text,false,false,0);
 				gameForm.Show();
 			}
 			else if (pvcRb.Checked)
 			{
-                /*if (difficultyPlayerVsComputerCb.SelectedItem is not null)
+				int depth = 0;
+                if (difficultyPlayerVsComputerCb.SelectedItem is not null)
 				{
 					int difficultyLevel = difficultyPlayerVsComputerCb.SelectedIndex;
-					if(difficultyLevel == 0)
-						MessageBox.Show($"Game Mode Player vs Computer  with difficulty: Easy");
-					else if(difficultyLevel == 1)
-						MessageBox.Show($"Game Mode Player vs Computer  with difficulty: Medium");
+					if (difficultyLevel == 0)
+						depth = 1;
+					else if (difficultyLevel == 1)
+						depth = 2;
 					else
-						MessageBox.Show($"Game Mode Player vs Computer  with difficulty: Hard");
+						depth = 4;
 				}
 				else
 				{
 					MessageBox.Show("Please select a difficulty level");
-				}*/
-                GameForm gameForm = new(player1Nametb.Text, player2Nametb.Text, false, true);
+					return;
+				}
+                GameForm gameForm = new(player1Nametb.Text, player2Nametb.Text, false, true,depth);
                 gameForm.Show();
             }
 			else if (cvcRb.Checked)
 			{
-
-				if (difficultyC1Cb.SelectedItem is not null && difficultyC2Cb.SelectedItem is not null)
+                int depth = 0,depth2 = 0;
+                if (difficultyC1Cb.SelectedItem is not null && difficultyC2Cb.SelectedItem is not null)
 				{
 					int c1DifficultyLevel = difficultyC1Cb.SelectedIndex;
 					int c2DifficultyLevel = difficultyC2Cb.SelectedIndex;
-					if (c1DifficultyLevel==0 && c2DifficultyLevel==0)
-						MessageBox.Show($"Game Mode Computer vs Computer  with difficulty: Easy Easy");
-					else if (c1DifficultyLevel == 1 && c2DifficultyLevel==1)
-						MessageBox.Show($"Game Mode Player vs Computer  with difficulty: Medium Medium");
+
+					if (c1DifficultyLevel == 0)
+						depth = 1;
+					else if (c1DifficultyLevel == 1)
+						depth = 2;
 					else
-						MessageBox.Show($"Game Mode Player vs Computer  with difficulty: Hard Hard");
-				}
+						depth = 4;
+                    if (c2DifficultyLevel == 0)
+                        depth2 = 1;
+                    else if (c2DifficultyLevel == 1)
+                        depth2 = 2;
+                    else
+                        depth2 = 4;
+                }
 				else
 				{
 					MessageBox.Show("Please select a difficulty level for both players");
 				}
-
-			}
+                GameForm gameForm = new(player1Nametb.Text, player2Nametb.Text, true, true, depth,depth2);
+                gameForm.Show();
+               // Thread.Sleep(4000);
+			   await Task.Delay(3000);
+                gameForm.CvsC();
+            }
 			else
 			{
 				MessageBox.Show("Invalid Game Mode");
