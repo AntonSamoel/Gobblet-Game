@@ -152,7 +152,7 @@ namespace Gobblet_Game
             if (isMax) return alpha;
              return beta;
             //return score;
-        }//login with my github account
+        }
         public static long HeustricComp(Player player1,Player player2,Board currentBoard, Move move,ref bool ok,long depth)
         {
             int bouns = 0;
@@ -287,8 +287,9 @@ namespace Gobblet_Game
         }
 
 
-        //method to check the draw condition
 
+
+        //method to check the draw condition
         public static bool isDraw(Player player1, Player player2)
         {
             if (player1.previousMoves.first == null || player1.previousMoves.second == null || player1.previousMoves.third == null) return false;
@@ -310,6 +311,7 @@ namespace Gobblet_Game
             //return true if both player make the sequence of draw
             return blackCondition && whiteCondition;
         }
+
     }
     public class Move
     {
