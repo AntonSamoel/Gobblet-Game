@@ -28,6 +28,35 @@ namespace Gobblet_Game
             Board newCopy = new(newCells);
             return newCopy;
         }
+        public static Player copyPlayer(Player player)
+        {
+            List<Stack<Piece>> pieces = new();
+            Clone(player.Pieces[0], pieces[0]);
+            Clone(player.Pieces[1], pieces[1]);
+            Clone(player.Pieces[2], pieces[2]);
+            Player player1 = new(player.Name, player.IsMyTurn, player.Color, pieces);
+            return player1;
+        }
+        public static Piece copyPiece(Piece piece)
+        {
+            Piece piece1 = new(piece.Id, piece.Size, piece.PlayerName, piece.Color, piece.Image);
+            return piece1;
+        }
+        private static void Clone(Stack<Piece> from, Stack<Piece> to)
+        {
+            Stack<Piece> temp = new();
+            while (from.Count > 0)
+            {
+                temp.Push(from.Pop());
+            }
+            while (temp.Count > 0)
+            {
+                from.Push(temp.Peek());
+                Piece piece = temp.Pop();
+                Piece piece1 = copyPiece(piece);
+                to.Push(piece1);
+            }
+        }
 
     }
 }
