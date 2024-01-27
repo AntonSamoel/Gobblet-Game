@@ -51,7 +51,7 @@ namespace Gobblet_Game
 					else if (difficultyLevel == 1)
 						depth = 3;
 					else
-						depth = 4;
+						depth = 5;
 				}
 				else
 				{

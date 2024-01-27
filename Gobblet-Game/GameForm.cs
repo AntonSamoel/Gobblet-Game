@@ -311,7 +311,7 @@ namespace Gobblet_Game
                 }
             }
         }
-        private void PictureBox_Click(object sender, EventArgs e)
+        private async void PictureBox_Click(object sender, EventArgs e)
         {
             if (sender is not PictureBox currentPictureBox) return;
 
@@ -327,7 +327,11 @@ namespace Gobblet_Game
                     previousPictureBox = null;
                     if (ok == -1)
                     {
-                        if((player1.IsMyTurn && player1.IsComputer) || (player2.IsMyTurn && player2.IsComputer)) ComputerPlay(deep,false);
+                        if ((player1.IsMyTurn && player1.IsComputer) || (player2.IsMyTurn && player2.IsComputer))
+                        {
+                            await Task.Delay(2000);
+                            ComputerPlay(deep, false);
+                        }
                     }
                     return;
                 }
@@ -366,7 +370,11 @@ namespace Gobblet_Game
                         previousPictureBox.BackColor = previousColor;
                         previousPictureBox = null;
 
-                        if ((player1.IsMyTurn && player1.IsComputer) || (player2.IsMyTurn && player2.IsComputer)) ComputerPlay(deep,false);
+                        if ((player1.IsMyTurn && player1.IsComputer) || (player2.IsMyTurn && player2.IsComputer))
+                        {
+                            await Task.Delay(2000);
+                            ComputerPlay(deep, false);
+                        }
 
                     }
 
