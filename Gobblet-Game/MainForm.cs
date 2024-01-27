@@ -47,7 +47,7 @@ namespace Gobblet_Game
 				{
 					int difficultyLevel = difficultyPlayerVsComputerCb.SelectedIndex;
 					if (difficultyLevel == 0)
-						depth = 1;
+						depth = 0;
 					else if (difficultyLevel == 1)
 						depth = 3;
 					else
@@ -70,13 +70,13 @@ namespace Gobblet_Game
 					int c2DifficultyLevel = difficultyC2Cb.SelectedIndex;
 
 					if (c1DifficultyLevel == 0)
-						depth = 1;
+						depth = 0;
 					else if (c1DifficultyLevel == 1)
 						depth = 3;
 					else
 						depth = 4;
                     if (c2DifficultyLevel == 0)
-                        depth2 = 1;
+                        depth2 = 0;
                     else if (c2DifficultyLevel == 1)
                         depth2 = 3;
                     else
