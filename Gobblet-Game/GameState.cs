@@ -109,6 +109,7 @@ namespace Gobblet_Game
                         if (ValidMove.IsWinning("black", currentBoard.Celles) == "black") return 1000000000;                // special case sent to el mo3ed
                         return (5 - depth) * -10;
                     }
+                    else if (isDraw()) return 1;
 
 
                 return 0;
@@ -223,6 +224,10 @@ namespace Gobblet_Game
       
         public bool isDraw()
         {
+            if (player1.previousMoves.first == null || player1.previousMoves.second == null || player1.previousMoves.third == null) return false;
+            if (player2.previousMoves.first == null || player2.previousMoves.second == null || player2.previousMoves.third == null) return false;
+
+
             //check that white make the sequence of moves that lead to draw
             bool whiteCondition = (player1.previousMoves.first.from == player1.previousMoves.third.from);
             whiteCondition = whiteCondition && (player1.previousMoves.first.to == player1.previousMoves.third.to);
