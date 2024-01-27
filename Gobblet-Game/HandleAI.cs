@@ -31,6 +31,9 @@ namespace Gobblet_Game
         public static Player copyPlayer(Player player)
         {
             List<Stack<Piece>> pieces = new();
+            pieces.Add(new Stack<Piece>());
+            pieces.Add(new Stack<Piece>());
+            pieces.Add(new Stack<Piece>());
             Clone(player.Pieces[0], pieces[0]);
             Clone(player.Pieces[1], pieces[1]);
             Clone(player.Pieces[2], pieces[2]);
