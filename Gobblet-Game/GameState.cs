@@ -152,7 +152,7 @@ namespace Gobblet_Game
             if (isMax) return alpha;
              return beta;
             //return score;
-        }
+        }//login with my github account
         public static long HeustricComp(Player player1,Player player2,Board currentBoard, Move move,ref bool ok,long depth)
         {
             int bouns = 0;
@@ -345,4 +345,5 @@ namespace Gobblet_Game
         }
     }
 }
+
 
