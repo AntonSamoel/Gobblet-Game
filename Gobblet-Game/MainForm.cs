@@ -49,7 +49,7 @@ namespace Gobblet_Game
 					if (difficultyLevel == 0)
 						depth = 1;
 					else if (difficultyLevel == 1)
-						depth = 2;
+						depth = 3;
 					else
 						depth = 4;
 				}
@@ -72,13 +72,13 @@ namespace Gobblet_Game
 					if (c1DifficultyLevel == 0)
 						depth = 1;
 					else if (c1DifficultyLevel == 1)
-						depth = 2;
+						depth = 3;
 					else
 						depth = 4;
                     if (c2DifficultyLevel == 0)
                         depth2 = 1;
                     else if (c2DifficultyLevel == 1)
-                        depth2 = 2;
+                        depth2 = 3;
                     else
                         depth2 = 4;
                 }
